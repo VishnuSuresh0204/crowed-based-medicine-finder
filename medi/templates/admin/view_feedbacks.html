@@ -1,0 +1,44 @@
+{% extends 'admin/base.html' %}
+{% block title %}View Feedbacks{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <h2 class="text-gradient" style="margin-bottom:2rem; font-size:2rem; font-weight: 700;">User Feedbacks</h2>
+    
+    <div class="grid">
+        {% for f in feedbacks %}
+        <div class="glass-card" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(30, 41, 59, 0.4); padding: 1.5rem; display: flex; flex-direction: column; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div style="width: 40px; height: 40px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary); font-weight: bold; font-size: 1.1rem;">
+                    {{ f.user.name|slice:":1" }}
+                </div>
+                <div>
+                    <h4 style="margin: 0; color: white; font-size: 1.1rem;">{{ f.user.name }}</h4>
+                    <p class="text-muted" style="font-size: 0.85rem; margin: 0;">{{ f.date }}</p>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 1.5rem; flex-grow: 1;">
+                <p style="color: var(--text-bright); line-height: 1.6; font-style: italic;">"{{ f.message }}"</p>
+            </div>
+            
+            <div style="padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+                <span class="text-muted" style="font-size: 0.85rem;">About:</span>
+                <span style="color: var(--primary); font-weight: 500; font-size: 0.9rem;">
+                    {% if f.pharmacy %}
+                        <i class="fas fa-store-alt" style="margin-right: 5px;"></i> {{ f.pharmacy.name }}
+                    {% else %}
+                        <i class="fas fa-globe" style="margin-right: 5px;"></i> General Feedback
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--muted);">
+            <i class="far fa-comments" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+            <p>No feedbacks received yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

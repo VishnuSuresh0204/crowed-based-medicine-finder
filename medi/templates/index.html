@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}MediConnect - Health Partner{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+    <div class="grid-2" style="align-items: center;">
+        
+        <div class="hero-text">
+            <div class="hero-content">
+                <h1>Healthcare <br><span>Reimagined.</span></h1>
+            </div>
+            <p>
+                MediConnect brings the pharmacy to your fingertips. 
+                Upload prescriptions, find medicines, and get fast delivery from trusted local partners.
+            </p>
+
+            <div class="hero-search">
+                <form method="GET" action="/search/" style="display:flex; width:100%;">
+                    <input type="text" name="q" placeholder="Search for medicines, brands..." required>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <a href="/user_reg/" class="btn btn-primary">Get Started</a>
+                <a href="#features" class="btn btn-outline" style="margin-left: 1rem;">Learn More</a>
+            </div>
+        </div>
+
+        <!-- HERO IMAGE -->
+        <div class="hero-image text-center">
+            <img src="{% static 'img/hero_futuristic.png' %}" alt="Healthcare Delivery" style="max-width: 100%; filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.3));">
+        </div>
+
+    </div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section class="container" id="features" style="padding: 80px 0;">
+    <div class="section-title">
+        <h2>Why MediConnect?</h2>
+        <p class="text-muted">Simple, secure, and reliable healthcare solutions.</p>
+    </div>
+
+    <div class="grid">
+        <div class="glass-card text-center">
+            <div class="feature-icon">💊</div>
+            <h4>Instant Availability</h4>
+            <p class="text-muted">Check real-time stock from verified pharmacies near you.</p>
+        </div>
+
+        <div class="glass-card text-center">
+            <div class="feature-icon">📝</div>
+            <h4>Digital Prescriptions</h4>
+            <p class="text-muted">Upload your doctor's note and let our partners handle the rest.</p>
+        </div>
+
+        <div class="glass-card text-center">
+            <div class="feature-icon">🚀</div>
+            <h4>Express Delivery</h4>
+            <p class="text-muted">Get your essential medicines delivered to your door in minutes.</p>
+        </div>
+
+        <div class="glass-card text-center">
+            <div class="feature-icon">🛡️</div>
+            <h4>100% Genuine</h4>
+            <p class="text-muted">We partner only with licensed and verified medical stores.</p>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="container" style="padding: 80px 0;">
+    <div class="section-title">
+        <h2>How It Works</h2>
+        <p class="text-muted">Your path to better health in 4 simple steps.</p>
+    </div>
+
+    <div class="grid">
+        <div class="step-item">
+            <div class="step-number">1</div>
+            <h4>Search</h4>
+            <p class="text-muted">Find your medicine</p>
+        </div>
+
+        <div class="step-item">
+            <div class="step-number">2</div>
+            <h4>Add to Cart</h4>
+            <p class="text-muted">Select required items</p>
+        </div>
+
+        <div class="step-item">
+            <div class="step-number">3</div>
+            <h4>Upload Prescription</h4>
+            <p class="text-muted">Attach doctor's note</p>
+        </div>
+
+        <div class="step-item">
+            <div class="step-number">4</div>
+            <h4>Fast Delivery</h4>
+            <p class="text-muted">Receive at your doorstep</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="container" style="padding-bottom: 80px;">
+    <div class="cta-section">
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Ready to simplify your healthcare?</h2>
+        <p class="text-muted" style="margin-bottom: 2rem;">Join thousands of satisfied users today.</p>
+        <a href="/user_reg/" class="btn btn-primary">Create Free Account</a>
+    </div>
+</section>
+
+{% endblock %}

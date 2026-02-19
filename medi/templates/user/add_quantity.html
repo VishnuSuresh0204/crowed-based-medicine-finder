@@ -1,0 +1,59 @@
+{% extends 'user/base.html' %}
+{% block title %}Book Medicine{% endblock %}
+{% block content %}
+
+<div class="glass-card" style="max-width: 500px; margin: 2rem auto; padding: 3rem; text-align: center;">
+    <h2 style="margin-bottom:1.5rem;">Book <span class="text-gradient">{{ medicine.name }}</span></h2>
+    
+    <div style="background: rgba(30, 41, 59, 0.4); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border:1px solid rgba(255,255,255,0.05);">
+        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+            <span class="text-muted">Price per unit</span>
+            <strong style="color: #4ade80;">${{ medicine.price }}</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+            <span class="text-muted">Available Stock</span>
+            <strong style="color: white;">{{ medicine.stock }}</strong>
+        </div>
+    </div>
+    
+    {% if msg %}
+    <div class="alert alert-danger" style="margin-bottom: 1.5rem;">
+        <i class="fas fa-exclamation-circle" style="margin-right: 5px;"></i> {{ msg }}
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group" style="margin-bottom:2rem;">
+            <label style="margin-bottom: 1rem; display: block;">Select Quantity</label>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                <button type="button" onclick="document.querySelector('input[name=quantity]').stepDown()" class="btn btn-outline" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border-color: rgba(255,255,255,0.2);">-</button>
+                <input type="number" name="quantity" min="1" max="{{ medicine.stock }}" required value="1" class="form-control" style="width: 80px; text-align: center; font-size: 1.2rem; font-weight: 700;">
+                <button type="button" onclick="document.querySelector('input[name=quantity]').stepUp()" class="btn btn-outline" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border-color: rgba(255,255,255,0.2);">+</button>
+            </div>
+        </div>
+        
+        {% if medicine.prescription_required %}
+        <div class="form-group" style="margin-bottom:2rem; text-align: left;">
+            <label style="color:#f59e0b; display:flex; align-items:center; gap:0.5rem;">
+                <i class="fas fa-file-prescription"></i> Prescription Required
+            </label>
+            <div class="custom-file-input">
+                <input type="file" name="prescription" required id="prescription-file" style="display:none;" onchange="document.getElementById('file-label').innerText = this.files[0].name">
+                <label for="prescription-file" id="file-label" class="form-control" style="cursor:pointer; display:flex; align-items:center; gap:0.5rem; justify-content:center; border-style:dashed; border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
+                    <i class="fas fa-upload"></i> Upload Prescription
+                </label>
+            </div>
+            <small class="text-muted" style="display:block; margin-top:0.5rem;">Please upload a valid prescription for this medicine.</small>
+        </div>
+        {% endif %}
+
+        <div style="display: flex; gap: 1rem;">
+            <a href="/view_medicines/?id={{ medicine.pharmacy.id }}" class="btn btn-outline" style="flex:1; border-color: rgba(255,255,255,0.2); color: var(--muted);">Cancel</a>
+            <button type="submit" class="btn btn-primary" style="flex:2;">
+                Confirm Booking <i class="fas fa-check" style="margin-left: 5px;"></i>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

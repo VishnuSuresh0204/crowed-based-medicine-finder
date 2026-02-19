@@ -1,0 +1,33 @@
+{% extends 'admin/base.html' %}
+{% block title %}View Reports{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <h2 class="text-gradient" style="margin-bottom:1.5rem; font-size:2rem; font-weight: 700;">User Reports</h2>
+    
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse: separate; border-spacing: 0;">
+            <thead>
+                <tr>
+                    <th style="border-top-left-radius: 10px;">User</th>
+                    <th>Pharmacy</th>
+                    <th>Message</th>
+                    <th style="border-top-right-radius: 10px;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reports %}
+                <tr style="transition: background 0.3s;">
+                    <td style="color:white; font-weight:500;">{{ r.user.name }}</td>
+                    <td><span style="color:#f87171; font-weight:600;">{{ r.pharmacy.name }}</span></td>
+                    <td class="text-muted" style="max-width: 300px; line-height: 1.4;">{{ r.message }}</td>
+                    <td style="color: var(--muted); font-size: 0.9rem;">{{ r.date }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" style="text-align:center; padding:3rem; color: var(--muted);">No reports found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

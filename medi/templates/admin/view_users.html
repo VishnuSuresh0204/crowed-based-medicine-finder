@@ -1,0 +1,38 @@
+{% extends 'admin/base.html' %}
+{% block title %}View Users{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <h2 class="text-gradient" style="margin-bottom:1.5rem; font-size:2rem; font-weight: 700;">Registered Users</h2>
+    
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse: separate; border-spacing: 0;">
+            <thead>
+                <tr>
+                    <th style="border-top-left-radius: 10px;">Name</th>
+                    <th>Place</th>
+                    <th>Phone</th>
+                    <th style="border-top-right-radius: 10px;">Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr style="transition: background 0.3s;">
+                    <td style="color:white; font-weight:500;">
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <div style="width: 30px; height: 30px; background: rgba(56, 189, 248, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 0.8rem;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            {{ u.name }}
+                        </div>
+                    </td>
+                    <td class="text-muted">{{ u.place }}</td>
+                    <td style="color: var(--text-bright);">{{ u.phone }}</td>
+                    <td class="text-muted">{{ u.email }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

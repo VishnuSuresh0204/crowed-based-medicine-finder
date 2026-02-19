@@ -1,0 +1,98 @@
+{% extends 'user/base.html' %}
+{% block title %}Medicines{% if pharmacy %} - {{ pharmacy.name }}{% endif %}{% endblock %}
+{% block content %}
+<div class="glass-card">
+    <div style="margin-bottom: 2rem;">
+        <a href="/view_shops/" class="text-muted hover-text-primary" style="display: inline-flex; align-items: center; text-decoration: none; margin-bottom: 1rem; font-size: 0.9rem;">
+            <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i> Back to Pharmacies
+        </a>
+        <h2 class="text-gradient" style="font-size:2rem; font-weight: 700;">
+            {% if pharmacy %}Medicines at {{ pharmacy.name }}{% else %}All Medicines{% endif %}
+        </h2>
+    </div>
+
+    <form method="GET" action="/view_medicines/" style="margin-bottom: 2.5rem; display: flex; gap: 1rem; max-width: 800px; flex-wrap:wrap;">
+        {% if pharmacy %}<input type="hidden" name="id" value="{{ pharmacy.id }}">{% endif %}
+        
+        <div style="flex: 1; min-width: 200px; position:relative;">
+            <input type="text" name="search" placeholder="Search medicines..." 
+                   value="{{ request.GET.search|default:'' }}"
+                   class="glass-card"
+                   style="width: 100%; padding: 0.8rem 1.2rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); color: white; outline: none; box-shadow:none;">
+        </div>
+
+        <div style="min-width: 150px;">
+            <select name="category" class="glass-card" style="width: 100%; padding: 0.8rem 1.2rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15, 23, 42, 0.6); color: white; outline: none; cursor:pointer; box-shadow:none; appearance:none;" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                {% for code, name in categories %}
+                <option value="{{ code }}" {% if request.GET.category == code %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem; border-radius: 50px;">Search</button>
+        
+        <a href="/view_medicines/?category=kit{% if pharmacy %}&id={{ pharmacy.id }}{% endif %}" class="btn btn-outline" style="padding: 0.8rem 1.5rem; border-radius: 50px; border-color: var(--accent); color: var(--accent);">
+            <i class="fas fa-box-open" style="margin-right: 5px;"></i> View Kits
+        </a>
+
+        {% if request.GET.search or request.GET.category %}
+        <a href="/view_medicines/{% if pharmacy %}?id={{ pharmacy.id }}{% endif %}" class="btn btn-outline" style="padding: 0.8rem; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-color: rgba(255,255,255,0.1); color: var(--muted);" title="Clear Filters">
+            <i class="fas fa-times"></i>
+        </a>
+        {% endif %}
+    </form>
+
+    {% if request.GET.search or request.GET.category %}
+    <p class="text-muted" style="margin-bottom: 2rem;">
+        Found <strong>{{ medicines|length }}</strong> item{% if medicines|length != 1 %}s{% endif %}
+    </p>
+    {% endif %}
+    
+    <div class="grid">
+        {% for m in medicines %}
+        <div class="glass-card" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(30, 41, 59, 0.5); padding: 0; overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+            <div style="height: 180px; width: 100%; background: #0f172a; position: relative;">
+                {% if m.image %}
+                <img src="{{ m.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                <div style="width: 100%; height: 100%; display:flex; align-items:center; justify-content:center; color:var(--muted); flex-direction:column;">
+                    <i class="fas fa-prescription-bottle-alt" style="font-size:2rem; margin-bottom:0.5rem; opacity:0.5;"></i>
+                    No Image
+                </div>
+                {% endif %}
+                <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.9rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
+                    ₹{{ m.price }}
+                </div>
+                <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(99, 102, 241, 0.9); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">
+                    {{ m.get_category_display }}
+                </div>
+            </div>
+            
+            <div style="padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <h3 style="margin: 0 0 0.5rem 0; color: white; font-size: 1.25rem;">{{ m.name }}</h3>
+                <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.5; flex-grow: 1;">{{ m.details|truncatechars:100 }}</p>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                    <span style="font-size: 0.9rem; color: {{ m.stock|yesno:'#4ade80,#ef4444' }}; font-weight: 500;">
+                        {% if m.stock > 0 %}
+                            <i class="fas fa-check-circle" style="margin-right:4px;"></i> In Stock: {{ m.stock }}
+                        {% else %}
+                            <i class="fas fa-times-circle" style="margin-right:4px;"></i> Out of Stock
+                        {% endif %}
+                    </span>
+                    
+                    {% if m.stock > 0 %}
+                    <a href="/book_medicine_qty/?id={{ m.id }}" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem; border-radius: 50px;">
+                        Book Now <i class="fas fa-cart-plus" style="margin-left:5px;"></i>
+                    </a>
+                    {% else %}
+                    <button disabled style="background: rgba(255,255,255,0.1); color: var(--muted); border: none; padding: 0.6rem 1.2rem; border-radius: 50px; cursor: not-allowed;">Unavailable</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

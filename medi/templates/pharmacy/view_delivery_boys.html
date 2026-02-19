@@ -1,0 +1,58 @@
+{% extends 'pharmacy/base.html' %}
+{% block title %}View Delivery Boys{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+        <h2 class="text-gradient" style="font-size:2rem; font-weight: 700;">Delivery Personnel</h2>
+        <a href="/add_delivery_boy/" class="btn btn-primary">
+            <i class="fas fa-user-plus" style="margin-right:0.5rem;"></i> Add New
+        </a>
+    </div>
+    
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse: separate; border-spacing: 0;">
+            <thead>
+                <tr>
+                    <th style="border-top-left-radius: 10px;">Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th style="border-top-right-radius: 10px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for db in delivery_boys %}
+                <tr style="transition: background 0.3s;">
+                    <td style="font-weight: 500; color:white;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width: 30px; height: 30px; background: rgba(99, 102, 241, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary);">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            {{ db.name }}
+                        </div>
+                    </td>
+                    <td class="text-muted">{{ db.phone }}</td>
+                    <td class="text-muted">{{ db.email }}</td>
+                    <td><span class="badge badge-success">{{ db.status|title }}</span></td>
+                    <td>
+                        <a href="/delete_delivery_boy/?id={{ db.id }}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: #ef4444; color: #ef4444;" onclick="return confirm('Are you sure you want to remove this delivery boy?');">
+                            <i class="fas fa-trash-alt" style="margin-right: 4px;"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center" style="padding: 3rem;">
+                        <div style="opacity: 0.5;">
+                            <i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <p>No delivery personnel found.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

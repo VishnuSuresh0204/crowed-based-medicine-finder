@@ -1,0 +1,225 @@
+{% extends 'pharmacy/base.html' %}
+{% block title %}Order Details #{{ booking.id }}{% endblock %}
+{% block content %}
+<style>
+.detail-card {
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: transform 0.3s;
+}
+.detail-card:hover {
+    transform: translateY(-5px);
+    background: rgba(30, 41, 59, 0.6);
+}
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.detail-row:last-child {
+    border-bottom: none;
+}
+.label {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+.value {
+    color: white;
+    font-weight: 500;
+}
+.print-only {
+    display: none;
+}
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .print-area, .print-area * {
+        visibility: visible;
+    }
+    .print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white;
+        color: black;
+        padding: 2rem;
+    }
+    .detail-card {
+        background: white;
+        border: 1px solid #ddd;
+        color: black;
+        box-shadow: none;
+        transform: none !important;
+    }
+    .value { color: black; }
+    .label { color: #666; }
+    .btn, .no-print { display: none; }
+    table { color: black; }
+    th { background: #eee; color: black; }
+    td { color: black; border-bottom: 1px solid #ddd; }
+}
+</style>
+
+<div class="glass-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem;" class="no-print">
+        <a href="/pharmacy_bookings/" class="text-muted hover-text-primary" style="text-decoration:none; display:flex; align-items:center; gap:0.5rem;">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+        <button onclick="window.print()" class="btn btn-outline" style="cursor:pointer;">
+            <i class="fas fa-print" style="margin-right:0.5rem;"></i> Print Bill
+        </button>
+    </div>
+
+    <!-- Action Panels -->
+    <div class="no-print" style="margin-bottom: 2rem;">
+        {% if booking.status == 'pending_approval' %}
+        <div class="glass-card" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 1.5rem;">
+            <h3 style="color: #fbbf24; margin-top: 0; display:flex; align-items:center; gap:0.5rem;">
+                <i class="fas fa-exclamation-triangle"></i> Prescription Verification Needed
+            </h3>
+            {% if booking.prescription %}
+            <div style="margin: 1rem 0;">
+                <p class="text-muted">User has uploaded a prescription:</p>
+                <a href="{{ booking.prescription.url }}" target="_blank" style="display:block; margin-top:0.5rem;">
+                    <img src="{{ booking.prescription.url }}" style="max-height: 200px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                </a>
+            </div>
+            {% else %}
+            <p style="color: #ef4444;"><i class="fas fa-times-circle"></i> No prescription file found (Error).</p>
+            {% endif %}
+            
+            <form method="post" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                {% csrf_token %}
+                <button type="submit" name="action" value="approve" class="btn btn-primary" style="background: #22c55e; border: none; cursor: pointer; flex:1;">
+                    <i class="fas fa-check"></i> Approve Order
+                </button>
+                <button type="submit" name="action" value="reject" class="btn btn-primary" style="background: #ef4444; border: none; cursor: pointer; flex:1;">
+                    <i class="fas fa-times"></i> Reject Order
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if booking.payment_status == 'paid' or booking.status == 'paid' %}
+            {% if not booking.delivery_boy %}
+            <div class="glass-card" style="margin-top: 1rem; padding: 1.5rem;">
+                <h3 class="text-primary" style="margin-top: 0; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-truck-loading"></i> Assign Delivery
+                </h3>
+                <form method="post" style="display: flex; gap: 1rem; align-items: flex-end; margin-top:1rem;">
+                    {% csrf_token %}
+                    <div style="flex-grow: 1;">
+                        <label style="display: block; color: var(--muted); margin-bottom: 0.5rem;">Select Delivery Personnel</label>
+                        <div style="position:relative;">
+                            <select name="delivery_boy" class="form-control" required style="appearance:none; cursor:pointer;">
+                                <option value="">-- Select --</option>
+                                {% for db in delivery_boys %}
+                                <option value="{{ db.id }}">{{ db.name }} ({{ db.phone }})</option>
+                                {% endfor %}
+                            </select>
+                            <i class="fas fa-chevron-down" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none;"></i>
+                        </div>
+                    </div>
+                    <button type="submit" name="action" value="assign" class="btn btn-primary" style="border: none; cursor: pointer; height: 48px;">
+                        Assign <i class="fas fa-paper-plane" style="margin-left:0.5rem;"></i>
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <div class="glass-card" style="margin-top: 1rem; background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); padding: 1.5rem;">
+                <h3 style="color: #4ade80; margin-top: 0; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-shipping-fast"></i> Delivery Status
+                </h3>
+                <div class="grid-2" style="margin-top:1rem;">
+                    <div>
+                        <p class="text-muted" style="margin-bottom:0.2rem;">Assigned to</p>
+                        <p style="font-weight:600; color:white;">{{ booking.delivery_boy.name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-muted" style="margin-bottom:0.2rem;">Current Status</p>
+                        <p style="font-weight:600; color:white; text-transform: uppercase;">{{ booking.get_delivery_status_display }}</p>
+                    </div>
+                </div>
+                {% if booking.user_confirmed %}
+                <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(34,197,94,0.2);">
+                    <p style="color: #4ade80; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fas fa-check-circle"></i> Delivery Confirmed by User
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="print-area">
+        <div class="text-center" style="margin-bottom:2rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.1);">
+            <h1 style="margin:0; font-size:2rem; font-weight:700;" class="text-gradient">{{ booking.medicine.pharmacy.name }}</h1>
+            <p class="text-muted" style="margin:0.5rem 0; font-size:0.9rem;">
+                <i class="fas fa-map-marker-alt" style="margin-right:5px;"></i> {{ booking.medicine.pharmacy.location }}
+            </p>
+            <p class="text-muted" style="margin:0; font-size:0.9rem;">
+                <i class="fas fa-phone" style="margin-right:5px;"></i> {{ booking.medicine.pharmacy.contact_number }}
+            </p>
+        </div>
+
+        <div class="grid-2">
+            <div class="detail-card">
+                <h3 style="margin-top:0; color:var(--primary); margin-bottom:1rem; font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-user-circle"></i> Customer Details
+                </h3>
+                <div class="detail-row"><span class="label">Name</span> <span class="value">{{ booking.user.name }}</span></div>
+                <div class="detail-row"><span class="label">Phone</span> <span class="value">{{ booking.user.phone }}</span></div>
+                <div class="detail-row"><span class="label">Email</span> <span class="value">{{ booking.user.email }}</span></div>
+                <div class="detail-row"><span class="label">Address</span> <span class="value">{{ booking.user.place }}</span></div>
+            </div>
+
+            <div class="detail-card">
+                <h3 style="margin-top:0; color:var(--primary); margin-bottom:1rem; font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-info-circle"></i> Order Info
+                </h3>
+                <div class="detail-row"><span class="label">Order ID</span> <span class="value">#{{ booking.id }}</span></div>
+                <div class="detail-row"><span class="label">Date</span> <span class="value">{{ booking.date|date:"Y-m-d" }}</span></div>
+                <div class="detail-row"><span class="label">Status</span> <span class="value">{{ booking.status|title }}</span></div>
+                <div class="detail-row"><span class="label">Payment</span> <span class="value">{{ booking.payment_status|title }}</span></div>
+            </div>
+        </div>
+
+        <div class="detail-card" style="margin-top:1rem;">
+            <h3 style="margin-top:0; color:var(--primary); margin-bottom:1rem; font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:0.5rem;">
+                <i class="fas fa-file-invoice-dollar"></i> Bill Details
+            </h3>
+            <table style="width:100%; text-align:left; border-collapse:collapse;">
+                <thead style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                    <tr>
+                        <th style="padding:1rem 0; color:var(--muted); font-weight:500;">Item</th>
+                        <th style="padding:1rem 0; color:var(--muted); font-weight:500;">Rate</th>
+                        <th style="padding:1rem 0; color:var(--muted); font-weight:500;">Qty</th>
+                        <th style="padding:1rem 0; text-align:right; color:var(--muted); font-weight:500;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:1rem 0; color:white;" class="value">{{ booking.medicine.name }}</td>
+                        <td style="padding:1rem 0; color:white;" class="value">₹{{ booking.medicine.price }}</td>
+                        <td style="padding:1rem 0; color:white;" class="value">{{ booking.quantity }}</td>
+                        <td style="padding:1rem 0; text-align:right; font-weight:bold; color:var(--primary);" class="value">₹{{ booking.amount }}</td>
+                    </tr>
+                </tbody>
+                <tfoot style="border-top:1px solid rgba(255,255,255,0.1);">
+                    <tr>
+                        <td colspan="3" style="padding:1.5rem 0; text-align:right; color:var(--muted);">Grand Total</td>
+                        <td style="padding:1.5rem 0; text-align:right; font-size:1.5rem; font-weight:bold; color:var(--primary);" class="value">₹{{ booking.amount }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

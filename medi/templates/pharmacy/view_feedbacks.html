@@ -1,0 +1,47 @@
+{% extends 'pharmacy/base.html' %}
+{% block title %}My Feedbacks{% endblock %}
+{% block content %}
+
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h2 class="text-gradient" style="margin-bottom:0.5rem; font-size:2rem; font-weight: 700;">Customer Feedbacks</h2>
+    <p class="text-muted">What your customers are saying about you.</p>
+</div>
+
+{% if feedbacks %}
+<div class="grid">
+    {% for f in feedbacks %}
+    <div class="glass-card" style="padding: 2rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -10px; right: -10px; font-size: 5rem; opacity: 0.05; transform: rotate(15deg);">
+            <i class="fas fa-quote-right"></i>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem;">
+                {{ f.user.name|slice:":1" }}
+            </div>
+            <div>
+                <h4 style="margin: 0; color: white;">{{ f.user.name }}</h4>
+                <small class="text-muted">{{ f.date }}</small>
+            </div>
+        </div>
+        
+        <p style="color: var(--text-muted); line-height: 1.6; font-style: italic;">"{{ f.message }}"</p>
+        
+        <div style="margin-top: 1.5rem; display: flex; gap: 2px; color: #f59e0b;">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="glass-card text-center" style="padding: 4rem;">
+    <i class="fas fa-comments" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem; opacity: 0.5;"></i>
+    <p class="text-muted">No feedbacks received yet.</p>
+</div>
+{% endif %}
+
+{% endblock %}

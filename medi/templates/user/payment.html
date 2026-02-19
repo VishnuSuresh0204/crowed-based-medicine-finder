@@ -1,0 +1,53 @@
+{% extends 'user/base.html' %}
+{% block title %}Payment{% endblock %}
+{% block content %}
+
+<div class="glass-card" style="max-width: 500px; margin: 4rem auto; padding: 3rem;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 class="text-gradient" style="font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 700;">Make Payment</h2>
+        <p class="text-muted">Securely pay for your pending bookings.</p>
+    </div>
+    
+    {% if msg %}
+    <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+        {{ msg }}
+    </div>
+    {% endif %}
+
+    <div style="background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.2); padding:1rem; border-radius:12px; margin-bottom:2rem; display:flex; align-items:start; gap:1rem;">
+        <i class="fas fa-info-circle" style="font-size: 1.2rem; color: var(--secondary); margin-top: 3px;"></i>
+        <div>
+             <h3 style="margin: 0 0 0.3rem 0; font-size: 1rem; color: var(--secondary);">Mock Payment Gateway</h3>
+             <p style="font-size: 0.9rem; margin: 0; color: var(--text-muted);">Clicking pay will process all pending items immediately. No real transaction occurs.</p>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label><i class="fas fa-credit-card" style="margin-right: 8px; color: var(--primary);"></i>Card Number</label>
+            <input type="text" class="form-control" placeholder="0000 0000 0000 0000" required maxlength="19" style="letter-spacing:2px; font-family: monospace;">
+        </div>
+        <div class="grid-2">
+             <div class="form-group">
+                <label><i class="fas fa-calendar-alt" style="margin-right: 8px; color: var(--accent);"></i>Expiry</label>
+                <input type="text" class="form-control" placeholder="MM/YY" required maxlength="5" style="text-align:center;">
+            </div>
+             <div class="form-group">
+                <label><i class="fas fa-lock" style="margin-right: 8px; color: #10b981;"></i>CVV</label>
+                <input type="password" class="form-control" placeholder="123" required maxlength="3" style="text-align:center;">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 1rem; padding: 1rem; font-size: 1.1rem;">
+            Pay Now <i class="fas fa-arrow-right" style="margin-left: 5px;"></i>
+        </button>
+    </form>
+    
+    <div style="margin-top: 1.5rem; text-align: center;">
+        <i class="fab fa-cc-visa" style="font-size: 2rem; color: rgba(255,255,255,0.3); margin: 0 10px;"></i>
+        <i class="fab fa-cc-mastercard" style="font-size: 2rem; color: rgba(255,255,255,0.3); margin: 0 10px;"></i>
+        <i class="fab fa-cc-amex" style="font-size: 2rem; color: rgba(255,255,255,0.3); margin: 0 10px;"></i>
+    </div>
+</div>
+{% endblock %}

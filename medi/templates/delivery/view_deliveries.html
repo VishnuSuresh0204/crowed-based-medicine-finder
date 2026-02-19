@@ -1,0 +1,70 @@
+{% extends 'delivery/base.html' %}
+{% block title %}My Deliveries{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <h2 class="text-gradient" style="margin-bottom:2rem; font-size:2rem; font-weight: 700;">Assigned Deliveries</h2>
+    
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse: separate; border-spacing: 0;">
+            <thead>
+                <tr>
+                    <th style="border-top-left-radius: 10px;">Order ID</th>
+                    <th>Customer</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Current Status</th>
+                    <th style="border-top-right-radius: 10px;">Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr style="transition: background 0.3s;">
+                    <td style="color:white; font-weight:500;">#{{ b.id }}</td>
+                    <td class="text-bright">{{ b.user.name }}</td>
+                    <td class="text-muted" title="{{ b.user.place }}" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <i class="fas fa-map-marker-alt text-primary"></i> {{ b.user.place }}
+                    </td>
+                    <td>
+                        <a href="tel:{{ b.user.phone }}" class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem; border-color: rgba(56, 189, 248, 0.3);">
+                            <i class="fas fa-phone"></i> {{ b.user.phone }}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="badge badge-info">{{ b.get_delivery_status_display }}</span>
+                        {% if b.user_confirmed %}
+                        <div style="margin-top: 4px; font-size: 0.75rem; color: #4ade80;">
+                            <i class="fas fa-check-circle"></i> Confirmed
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if b.delivery_status != 'delivered' %}
+                        <form method="post" action="" style="display:flex; align-items: center; gap:0.5rem;">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ b.id }}">
+                            <select name="status" onchange="this.form.submit()" class="glass-card" style="padding: 0.4rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; background: rgba(15, 23, 42, 0.8); color: white; outline: none; font-size: 0.9rem; cursor: pointer;">
+                                <option value="pending" {% if b.delivery_status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="picked_up" {% if b.delivery_status == 'picked_up' %}selected{% endif %}>Picked Up</option>
+                                <option value="on_the_way" {% if b.delivery_status == 'on_the_way' %}selected{% endif %}>On the Way</option>
+                                <option value="delivered" {% if b.delivery_status == 'delivered' %}selected{% endif %}>Delivered</option>
+                            </select>
+                        </form>
+                        {% else %}
+                        <span class="badge badge-success"><i class="fas fa-check"></i> Completed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted" style="padding:3rem;">
+                        <i class="fas fa-box-open" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>No deliveries assigned yet.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

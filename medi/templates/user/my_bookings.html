@@ -1,0 +1,116 @@
+{% extends 'user/base.html' %}
+{% block title %}My Bookings{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 class="text-gradient" style="margin:0; font-size:2rem; font-weight: 700;">My Bookings</h2>
+    </div>
+
+    {% if total_amount > 0 %}
+    <div class="glass-card" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2)); border: 1px solid rgba(99, 102, 241, 0.3); padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <span class="text-muted" style="display: block; font-size: 0.9rem; margin-bottom: 0.25rem;">Total Payable Amount</span>
+            <strong style="font-size: 2rem; color: white; text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);">₹{{ total_amount }}</strong>
+        </div>
+        <a href="/make_payment/" class="btn btn-primary" style="padding: 0.8rem 2rem; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);">
+            Proceed to Pay <i class="fas fa-credit-card"></i>
+        </a>
+    </div>
+    {% endif %}
+
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse: separate; border-spacing: 0;">
+            <thead>
+                <tr>
+                    <th style="border-top-left-radius: 10px;">Medicine</th>
+                    <th>Pharmacy</th>
+                    <th>Qty</th>
+                    <th>Amount</th>
+                    <th>Prescription</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th style="border-top-right-radius: 10px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr style="transition: background 0.3s;">
+                    <td style="color:white; font-weight:500;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width: 30px; height: 30px; background: rgba(56, 189, 248, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                                <i class="fas fa-pills" style="font-size: 0.8rem;"></i>
+                            </div>
+                            {{ b.medicine.name }}
+                        </div>
+                    </td>
+                    <td class="text-muted">{{ b.medicine.pharmacy.name }}</td>
+                    <td>{{ b.quantity }}</td>
+                    <td style="font-weight: 600; color: var(--text-bright);">₹{{ b.amount }}</td>
+                    <td>
+                        {% if b.prescription %}
+                        <a href="{{ b.prescription.url }}" target="_blank" class="text-primary hover-underline" style="font-size: 0.9rem;">
+                            <i class="fas fa-file-prescription"></i> View
+                        </a>
+                        {% else %}
+                        <span class="text-muted" style="font-size: 0.8rem;">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                         {% if b.status == 'pending_approval' %}
+                            <span class="badge badge-warning">Pending Approval</span>
+                         {% elif b.status == 'rejected' %}
+                             <span class="badge badge-danger">Rejected</span>
+                         {% else %}
+                            <span class="badge badge-success">{{ b.status|title }}</span>
+                         {% endif %}
+                         
+                         {% if b.delivery_status != 'pending' %}
+                            <div style="margin-top:0.3rem; font-size:0.75rem; color: var(--secondary);">
+                                <i class="fas fa-truck"></i> {{ b.get_delivery_status_display }}
+                            </div>
+                         {% endif %}
+                    </td>
+                    <td>
+                        {% if b.payment_status == 'paid' %}
+                        <span style="color: #4ade80; font-weight: 600;"><i class="fas fa-check-circle"></i> Paid</span>
+                        {% else %}
+                        <span style="color: #f87171; font-weight: 600;"><i class="fas fa-clock"></i> Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div style="display:flex; gap: 0.5rem; align-items: center;">
+                            <a href="/view_medicines/?id={{ b.medicine.pharmacy.id }}&search={{ b.medicine.name }}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; border-color: rgba(99, 102, 241, 0.3); color: var(--secondary);">Buy Again</a>
+                            
+                            {% if b.payment_status == 'pending' %}
+                                <a href="/cancel_booking/?id={{ b.id }}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; border-color: rgba(239, 68, 68, 0.3); color: #fca5a5;" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel</a>
+                            {% endif %}
+    
+                            {% if b.delivery_status == 'delivered' and not b.user_confirmed %}
+                                <a href="/confirm_delivery/?id={{ b.id }}" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; background: #22c55e; border: none;">Confirm</a>
+                            {% elif b.user_confirmed %}
+                                <span style="color:#4ade80; font-size:0.8rem;"><i class="fas fa-check-double"></i> Received</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 4rem; color: var(--muted);">
+                        <i class="fas fa-shopping-basket" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p style="margin-bottom: 1.5rem;">You haven't booked any medicines yet.</p>
+                        <a href="/view_shops/" class="btn btn-primary">Browse Pharmacies</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="margin-top: 2rem; text-align: center;">
+        <a href="/view_medicines/" class="btn btn-outline" style="display:inline-flex; align-items:center; gap:0.5rem; border-color: var(--primary); color: var(--primary);">
+            <i class="fas fa-plus"></i> Add More Medicines
+        </a>
+    </div>
+</div>
+{% endblock %}

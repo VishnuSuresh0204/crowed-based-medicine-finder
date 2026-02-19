@@ -1,0 +1,55 @@
+{% extends 'user/base.html' %}
+{% block title %}User Home{% endblock %}
+
+{% block content %}
+<div class="text-center" style="padding:3rem 0 4rem;">
+    <h1 style="font-size:3.5rem;margin-bottom:1rem;font-weight:700;"><span class="text-gradient">Welcome back!</span></h1>
+    <p class="text-muted" style="font-size:1.2rem;max-width:600px;margin:0 auto 3rem;">
+        Find medicines, track your orders, and manage your health essentials.
+    </p>
+
+    <form action="/view_shops/" method="get" style="max-width:600px;margin:0 auto;display:flex;background:rgba(30,41,59,0.8);border-radius:50px;border:1px solid rgba(255,255,255,0.1);padding:0.5rem;">
+        <input type="text" name="search" placeholder="Search for pharmacies..." 
+               style="flex:1;padding:0.8rem 1.5rem;border:none;background:transparent;color:white;outline:none;font-size:1rem;">
+        <button type="submit" class="btn btn-primary" style="border-radius:50px;padding:0.8rem 2rem;">Search</button>
+    </form>
+</div>
+
+<div class="grid">
+    <!-- Browse Shops -->
+    <div class="glass-card" style="height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+            <div style="background:rgba(56,189,248,0.1);width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
+                <i class="fas fa-store text-primary" style="font-size:1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">Browse Shops</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">View all available pharmacies near you and explore their inventory.</p>
+        </div>
+        <a href="/view_shops/" class="btn btn-outline btn-block" style="margin-top:auto;">Browse &rarr;</a>
+    </div>
+    
+    <!-- My Orders -->
+    <div class="glass-card" style="height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+            <div style="background:rgba(99,102,241,0.1);width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
+                <i class="fas fa-shopping-bag text-secondary" style="font-size:1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">My Orders</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">Track your current orders and view your purchase history.</p>
+        </div>
+        <a href="/my_bookings/" class="btn btn-outline btn-block" style="margin-top:auto;">View Orders &rarr;</a>
+    </div>
+
+    <!-- Payments -->
+    <div class="glass-card" style="height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+            <div style="background:rgba(34,197,94,0.1);width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
+                <i class="fas fa-file-invoice-dollar" style="color:#22c55e;font-size:1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">Payment & Bills</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">Manage your payments and download invoices for insurance.</p>
+        </div>
+        <a href="/bill/" class="btn btn-outline btn-block" style="margin-top:auto;">History &rarr;</a>
+    </div>
+</div>
+{% endblock %}

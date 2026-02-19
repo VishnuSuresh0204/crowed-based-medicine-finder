@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MediConnect | {% block title %}Home{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/style.css' %}?v=7" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- STICKY NAVBAR -->
+<nav class="navbar glass-effect" style="position: sticky; top: 0; z-index: 1000;">
+    <a href="/" class="logo">Medi<span class="text-gradient">Connect</span></a>
+
+    <div class="nav-links">
+        <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+        <a href="/login/" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="/user_reg/" class="nav-link"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="/pharmacy_reg/" class="btn btn-primary" style="margin-left: 10px;">
+            <i class="fas fa-handshake"></i> Partner Plan
+        </a>
+    </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<div class="container" style="padding-top: 2rem;">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <h3>Medi<span style="color:var(--primary);">Connect</span></h3>
+                <p>
+                    Connecting patients with trusted pharmacies for seamless
+                    healthcare delivery and faster access to medicines.
+                </p>
+            </div>
+
+            <div>
+                <h3>Services</h3>
+                <a href="#">Express Delivery</a>
+                <a href="#">Prescription Upload</a>
+                <a href="#">24/7 Support</a>
+            </div>
+
+            <div>
+                <h3>Legal</h3>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Partner Agreement</a>
+            </div>
+
+            <div>
+                <h3>Contact</h3>
+                <p><i class="fas fa-envelope"></i> hello@mediconnect.com</p>
+                <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2026 MediConnect Healthcare Pvt Ltd. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

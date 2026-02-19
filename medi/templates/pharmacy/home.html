@@ -1,0 +1,72 @@
+{% extends 'pharmacy/base.html' %}
+{% block title %}Pharmacy Dashboard{% endblock %}
+
+{% block content %}
+<div class="text-center" style="padding: 3rem 0 4rem;">
+    <h1 style="font-size:3.5rem; margin-bottom:1rem; font-weight: 700;">
+        <span class="text-gradient">Pharmacy Dashboard</span>
+    </h1>
+    <p class="text-muted" style="font-size:1.2rem; max-width:600px; margin:0 auto 3rem;">
+        Manage your inventory, track live orders, and monitor performance with real-time insights.
+    </p>
+
+    <div style="display:flex; justify-content:center; gap:1rem;">
+        <a href="/add_medicine/" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add New Medicine</a>
+        <a href="/manage_medicine/" class="btn btn-outline"><i class="fas fa-boxes"></i> Manage Stock</a>
+    </div>
+</div>
+
+<div class="grid">
+    <!-- Inventory Card -->
+    <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+            <div style="background: rgba(56, 189, 248, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                <i class="fas fa-capsules text-primary" style="font-size: 1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">Inventory</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">Manage your medicine stock. Add new items, update prices, and track availability.</p>
+        </div>
+        <div style="display:flex; gap:0.5rem; margin-top: auto;">
+            <a href="/add_medicine/" class="text-primary" style="font-weight:600; font-size: 0.9rem;">Add New</a>
+            <span class="text-muted">|</span>
+            <a href="/manage_medicine/" class="text-primary" style="font-weight:600; font-size: 0.9rem;">Manage All &rarr;</a>
+        </div>
+    </div>
+    
+    <!-- Orders Card -->
+    <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+            <div style="background: rgba(99, 102, 241, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                <i class="fas fa-shopping-cart text-secondary" style="font-size: 1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">Orders & Bookings</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">View and manage incoming bookings from customers. Track payment and delivery status.</p>
+        </div>
+        <a href="/pharmacy_bookings/" class="btn btn-outline btn-block" style="margin-top: auto;">View Orders &rarr;</a>
+    </div>
+
+    <!-- Feedbacks Card -->
+    <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+            <div style="background: rgba(16, 185, 129, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                <i class="fas fa-comments" style="color:#10b981; font-size: 1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">Customer Feedbacks</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">Read reviews and ratings from your customers to improve your service.</p>
+        </div>
+        <a href="/pharmacy_feedbacks/" class="btn btn-outline btn-block" style="margin-top: auto;">View Feedbacks &rarr;</a>
+    </div>
+
+    <!-- Delivery Card -->
+    <div class="glass-card" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+            <div style="background: rgba(245, 158, 11, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                <i class="fas fa-truck" style="color:#f59e0b; font-size: 1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">Delivery Fleet</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">Manage your delivery personnel. Add new riders and track their status.</p>
+        </div>
+        <a href="/view_delivery_boys/" class="btn btn-outline btn-block" style="margin-top: auto;">Manage Logistics &rarr;</a>
+    </div>
+</div>
+{% endblock %}

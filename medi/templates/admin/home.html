@@ -1,0 +1,66 @@
+{% extends 'admin/base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="text-center" style="padding:3rem 0 4rem;">
+    <h1 style="font-size:3.5rem;margin-bottom:1rem;font-weight:700;"><span class="text-gradient">Admin Dashboard</span></h1>
+    <p class="text-muted" style="font-size:1.2rem;max-width:600px;margin:0 auto 3rem;">
+        Welcome, Administrator. Manage your pharmacy network, oversee users, and ensure smooth operations from this central hub.
+    </p>
+
+    <div style="display:flex;justify-content:center;gap:1rem;">
+        <a href="/manage_pharmacy/" class="btn btn-primary"><i class="fas fa-clinic-medical"></i> Manage Pharmacies</a>
+        <a href="/view_reports/" class="btn btn-outline"><i class="fas fa-flag"></i> View Reports</a>
+    </div>
+</div>
+
+<div class="grid">
+    <!-- Manage Pharmacies -->
+    <div class="glass-card" style="height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+            <div style="background:rgba(56,189,248,0.1);width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
+                <i class="fas fa-clinic-medical text-primary" style="font-size:1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">Manage Pharmacies</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">View, approve, or block pharmacy accounts. Maintain network quality.</p>
+        </div>
+        <a href="/manage_pharmacy/" class="btn btn-outline btn-block" style="margin-top:auto;">View Pharmacies &rarr;</a>
+    </div>
+    
+    <!-- User Reports -->
+    <div class="glass-card" style="height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+            <div style="background:rgba(99,102,241,0.1);width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
+                <i class="fas fa-clipboard-list text-secondary" style="font-size:1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">User Reports</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">Check feedbacks and reports from users to ensure platform safety.</p>
+        </div>
+        <a href="/view_reports/" class="btn btn-outline btn-block" style="margin-top:auto;">View Reports &rarr;</a>
+    </div>
+
+    <!-- System Users -->
+    <div class="glass-card" style="height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+            <div style="background:rgba(34,197,94,0.1);width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
+                <i class="fas fa-users" style="color:#22c55e;font-size:1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">System Users</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">View all registered users and manage their access.</p>
+        </div>
+        <a href="/view_users/" class="btn btn-outline btn-block" style="margin-top:auto;">View Users &rarr;</a>
+    </div>
+
+    <!-- Deliveries -->
+    <div class="glass-card" style="height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+            <div style="background:rgba(245,158,11,0.1);width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
+                <i class="fas fa-truck" style="color:#f59e0b;font-size:1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">Deliveries</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">Monitor all deliveries across the platform.</p>
+        </div>
+        <a href="/admin_view_deliveries/" class="btn btn-outline btn-block" style="margin-top:auto;">View Deliveries &rarr;</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'user/base.html' %}
+{% block title %}Invoice{% endblock %}
+{% block content %}
+<style>
+@media print {
+    body * { visibility: hidden; }
+    .invoice-container, .invoice-container * { visibility: visible; }
+    .invoice-container { position: absolute; left: 0; top: 0; width: 100%; color: black !important; background: white !important; }
+    .no-print { display: none; }
+    .glass-card { background: white !important; border: none !important; box-shadow: none !important; }
+    .text-gradient { background: none !important; -webkit-text-fill-color: black !important; color: black !important; }
+    table { width: 100%; border-collapse: collapse; }
+    th { border-bottom: 2px solid #ddd; }
+    td { border-bottom: 1px solid #ddd; }
+}
+</style>
+
+<div class="glass-card invoice-container" style="max-width: 800px; margin: 0 auto; padding: 0; overflow: hidden;">
+    <div style="background: rgba(30, 41, 59, 0.6); padding: 3rem; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+        <h1 class="text-gradient" style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -1px;">PharmaSky</h1>
+        <p class="text-muted" style="margin: 0; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem;">Official Invoice</p>
+        <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 2rem;">
+            <div>
+                <span class="text-muted" style="font-size: 0.8rem;">DATE</span>
+                <div style="font-weight: 600; color: white;">{{ date }}</div>
+            </div>
+            <div>
+                <span class="text-muted" style="font-size: 0.8rem;">ORDER TOTAL</span>
+                <div style="font-weight: 600; color: var(--primary);">${{ total }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding: 3rem;">
+        <table style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding-bottom: 1rem; color: var(--muted); font-weight: 500; font-size: 0.85rem; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1);">Item Details</th>
+                    <th style="text-align: center; padding-bottom: 1rem; color: var(--muted); font-weight: 500; font-size: 0.85rem; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1);">Qty</th>
+                    <th style="text-align: right; padding-bottom: 1rem; color: var(--muted); font-weight: 500; font-size: 0.85rem; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1);">Price</th>
+                    <th style="text-align: right; padding-bottom: 1rem; color: var(--muted); font-weight: 500; font-size: 0.85rem; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1);">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td style="padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-weight: 600; color: white;">{{ b.medicine.name }}</div>
+                        <div style="font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem;">{{ b.medicine.pharmacy.name }}</div>
+                    </td>
+                    <td style="text-align: center; padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-bright);">{{ b.quantity }}</td>
+                    <td style="text-align: right; padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--muted);">${{ b.medicine.price }}</td>
+                    <td style="text-align: right; padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 600; color: white;">${{ b.amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right; padding-top: 2rem; color: var(--muted);">Subtotal</td>
+                    <td style="text-align: right; padding-top: 2rem; color: white;">${{ total }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align: right; padding-top: 0.5rem; color: var(--primary); font-weight: 700; font-size: 1.5rem;">Grand Total</td>
+                    <td style="text-align: right; padding-top: 0.5rem; color: var(--primary); font-weight: 700; font-size: 1.5rem;">${{ total }}</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <div class="no-print" style="text-align: center; margin-top: 3rem; display: flex; justify-content: center; gap: 1rem;">
+            <button onclick="window.print()" class="btn btn-outline" style="border-radius: 50px;">
+                <i class="fas fa-print" style="margin-right: 0.5rem;"></i> Print Invoice
+            </button>
+            <a href="/user_home/" class="btn btn-primary" style="border-radius: 50px;">
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

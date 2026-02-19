@@ -1,0 +1,84 @@
+{% extends 'pharmacy/base.html' %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <h2 class="text-gradient" style="margin:0; font-size:2rem; font-weight: 700;">Incoming Orders</h2>
+        
+        <form method="GET" class="glass-card" style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem 1rem; border-radius:50px; margin: 0; box-shadow: none; background: rgba(30, 41, 59, 0.6);">
+            <i class="fas fa-calendar-alt" style="color: var(--primary);"></i>
+            <label class="text-muted" style="font-size:0.9rem; margin-bottom: 0;">Date:</label>
+            <input type="date" name="date" value="{{ date }}" onchange="this.form.submit()" 
+                   style="background:transparent; border:none; color:white; outline:none; font-family:inherit; cursor:pointer;">
+        </form>
+    </div>
+    
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse: separate; border-spacing: 0;">
+            <thead>
+                <tr>
+                    <th style="border-top-left-radius: 10px;">Order ID</th>
+                    <th>Medicine</th>
+                    <th>Qty</th>
+                    <th>Amount</th>
+                    <th>User</th>
+                    <th>Phone</th>
+                    <th>Prescription</th>
+                    <th>Status</th>
+                    <th style="border-top-right-radius: 10px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr style="transition: background 0.3s;">
+                    <td class="text-muted">#{{ b.id }}</td>
+                    <td style="color:white; font-weight:500;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width: 30px; height: 30px; background: rgba(56, 189, 248, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                                <i class="fas fa-pills" style="font-size: 0.8rem;"></i>
+                            </div>
+                            {{ b.medicine.name }}
+                        </div>
+                    </td>
+                    <td>{{ b.quantity }}</td>
+                    <td style="font-weight: 600; color: var(--text-bright);">₹{{ b.amount }}</td>
+                    <td>{{ b.user.name }}</td>
+                    <td class="text-muted">{{ b.user.phone }}</td>
+                    <td>
+                        {% if b.prescription %}
+                        <a href="{{ b.prescription.url }}" target="_blank" class="text-warning hover-underline" style="font-size: 0.9rem;">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        {% else %}
+                        <span class="text-muted" style="font-size: 0.8rem;">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if b.payment_status == 'paid' %}
+                        <span class="badge badge-success"><i class="fas fa-check-circle" style="margin-right: 4px;"></i>Paid</span>
+                        {% else %}
+                        <span class="badge badge-warning"><i class="fas fa-clock" style="margin-right: 4px;"></i>Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/pharmacy_booking_details/?id={{ b.id }}" class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem; border-radius: 6px;">
+                            View Details <i class="fas fa-arrow-right" style="margin-left: 4px;"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center" style="padding: 3rem;">
+                        <div style="opacity: 0.5;">
+                            <i class="fas fa-clipboard-list" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <p>No orders found for this date.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

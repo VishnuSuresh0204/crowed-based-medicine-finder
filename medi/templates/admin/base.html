@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MediConnect Admin | {% block title %}Dashboard{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/style.css' %}?v=8" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar glass-effect" style="position: sticky; top: 0; z-index: 1000;">
+    <a href="/admin_home/" class="logo">Medi<span class="text-gradient">Admin</span></a>
+    <div class="nav-links">
+        <a href="/admin_home/" class="nav-link"><i class="fas fa-chart-line"></i> Overview</a>
+        <a href="/manage_pharmacy/" class="nav-link"><i class="fas fa-store"></i> Pharmacies</a>
+        <a href="/view_users/" class="nav-link"><i class="fas fa-users"></i> Users</a>
+        <a href="/admin_view_deliveries/" class="nav-link"><i class="fas fa-shipping-fast"></i> Deliveries</a>
+        <a href="/view_feedbacks/" class="nav-link"><i class="fas fa-comments"></i> Feedback</a>
+        <a href="/view_reports/" class="nav-link"><i class="fas fa-flag"></i> Reports</a>
+        <a href="/logout/" class="btn btn-outline" style="border-color: rgba(239, 68, 68, 0.5); color: #fca5a5;">Logout</a>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: 2rem; min-height: 80vh;">
+    {% block content %}{% endblock %}
+</div>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div style="grid-column: 1 / -1; text-align: center; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Medi<span class="text-gradient">Admin</span></h3>
+                <p class="text-muted">Secure Administration Console</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 MediConnect Administration System. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

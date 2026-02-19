@@ -1,0 +1,39 @@
+{% extends 'delivery/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="text-center" style="padding:3rem 0 4rem;">
+    <h1 style="font-size:3.5rem;margin-bottom:1rem;font-weight:700;"><span class="text-gradient">Delivery Dashboard</span></h1>
+    <p class="text-muted" style="font-size:1.2rem;max-width:600px;margin:0 auto 3rem;">
+        View your assigned deliveries, track locations, and update order status in real-time.
+    </p>
+
+    <div style="display:flex;justify-content:center;gap:1rem;">
+        <a href="/delivery_deliveries/" class="btn btn-primary"><i class="fas fa-shipping-fast"></i> View My Deliveries</a>
+    </div>
+</div>
+
+<div class="grid">
+    <div class="glass-card" style="height:100%; display:flex; flex-direction:column; justify-content:space-between; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div>
+            <div style="background:rgba(245,158,11,0.1); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+                <i class="fas fa-box-open" style="color:#f59e0b; font-size:1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">Assigned Deliveries</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">Check for pending deliveries and update their status upon completion.</p>
+        </div>
+        <a href="/delivery_deliveries/" class="btn btn-outline btn-block" style="margin-top:auto;">Check Now <i class="fas fa-arrow-right"></i></a>
+    </div>
+    
+    <div class="glass-card" style="height:100%; display:flex; flex-direction:column; justify-content:space-between; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div>
+            <div style="background:rgba(16,185,129,0.1); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+                <i class="fas fa-history" style="color:#10b981; font-size:1.5rem;"></i>
+            </div>
+            <h3 class="text-bright" style="margin-bottom:0.5rem;">History</h3>
+            <p class="text-muted" style="margin-bottom:1.5rem;">View your past completed deliveries and performance.</p>
+        </div>
+        <a href="/delivery_deliveries/?status=completed" class="btn btn-outline btn-block" style="margin-top:auto;">View History <i class="fas fa-arrow-right"></i></a>
+    </div>
+</div>
+{% endblock %}

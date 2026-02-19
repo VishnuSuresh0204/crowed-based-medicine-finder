@@ -1,0 +1,94 @@
+{% extends 'pharmacy/base.html' %}
+{% block title %}Manage Medicines{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap: wrap; gap: 1rem;">
+        <h2 class="text-gradient" style="font-size:2rem; font-weight: 700;">My Inventory</h2>
+        
+        <div style="display:flex; gap: 1rem; align-items: center;">
+            <form method="GET" style="display:flex; align-items:center; gap:0.5rem; background: rgba(30, 41, 59, 0.6); padding:0.5rem; border-radius:50px; border: 1px solid rgba(255,255,255,0.1);">
+                <select name="category" onchange="this.form.submit()" style="background:transparent; border:none; color:white; outline:none; padding: 0 0.5rem; cursor:pointer;">
+                    <option value="" style="color: black;">All Categories</option>
+                    <option value="tablet" style="color: black;" {% if request.GET.category == 'tablet' %}selected{% endif %}>Tablet</option>
+                    <option value="syrup" style="color: black;" {% if request.GET.category == 'syrup' %}selected{% endif %}>Syrup</option>
+                    <option value="ointment" style="color: black;" {% if request.GET.category == 'ointment' %}selected{% endif %}>Ointment</option>
+                    <option value="equipment" style="color: black;" {% if request.GET.category == 'equipment' %}selected{% endif %}>Equipment</option>
+                    <option value="kit" style="color: black;" {% if request.GET.category == 'kit' %}selected{% endif %}>Kit</option>
+                    <option value="other" style="color: black;" {% if request.GET.category == 'other' %}selected{% endif %}>Other</option>
+                </select>
+            </form>
+
+            <a href="/add_medicine/" class="btn btn-primary">
+                <i class="fas fa-plus-circle" style="margin-right:0.5rem;"></i> Add Item
+            </a>
+        </div>
+    </div>
+    
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse: separate; border-spacing: 0;">
+            <thead>
+                <tr>
+                    <th style="border-top-left-radius: 10px;">Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Image</th>
+                    <th style="border-top-right-radius: 10px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in medicines %}
+                <tr style="transition: background 0.3s;">
+                    <td style="font-weight: 500; color:white;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary);"></div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span>{{ m.name }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge" style="background: rgba(255,255,255,0.1); color: var(--text-bright); border: 1px solid rgba(255,255,255,0.1);">{{ m.get_category_display }}</span>
+                    </td>
+                    <td style="font-weight: 600; color: var(--text-bright);">₹{{ m.price }}</td>
+                    <td>
+                        {% if m.stock > 0 %}
+                        <span class="badge badge-success">In Stock ({{ m.stock }})</span>
+                        {% else %}
+                        <span class="badge badge-danger">Out of Stock</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if m.image %}
+                        <div style="width: 40px; height: 40px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                            <img src="{{ m.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div style="display:flex; gap:0.5rem;">
+                            <a href="/edit_medicine/?id={{ m.id }}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: var(--secondary); color: var(--secondary);">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="/delete_medicine/?id={{ m.id }}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: #ef4444; color: #ef4444;" onclick="return confirm('Are you sure you want to delete this medicine?');">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if not medicines %}
+    <div class="text-center" style="padding: 4rem 0;">
+        <i class="fas fa-box-open" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem; opacity: 0.5;"></i>
+        <p class="text-muted">No medicines found. Add your first medicine to get started.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

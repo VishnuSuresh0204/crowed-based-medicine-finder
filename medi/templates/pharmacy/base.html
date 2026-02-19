@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Partner Portal | {% block title %}Dashboard{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/style.css' %}?v=8" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar glass-effect" style="position: sticky; top: 0; z-index: 1000;">
+    <a href="/pharmacy_home/" class="logo">Medi<span class="text-gradient">Partner</span></a>
+    <div class="nav-links">
+        <a href="/pharmacy_home/" class="nav-link"><i class="fas fa-columns"></i> Dashboard</a>
+        <a href="/manage_medicine/" class="nav-link"><i class="fas fa-capsules"></i> Stock</a>
+        <a href="/pharmacy_bookings/" class="nav-link"><i class="fas fa-shopping-bag"></i> Orders</a>
+        <a href="/view_delivery_boys/" class="nav-link"><i class="fas fa-motorcycle"></i> Logistics</a>
+        <a href="/pharmacy_feedbacks/" class="nav-link"><i class="fas fa-star"></i> Reviews</a>
+        <a href="/logout/" class="btn btn-outline" style="border-color: rgba(239, 68, 68, 0.5); color: #fca5a5;">Logout</a>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: 2rem; min-height: 80vh;">
+    {% block content %}{% endblock %}
+</div>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <h3 class="logo">Medi<span class="text-gradient">Partner</span></h3>
+                <p class="text-muted">Manage your pharmacy business efficiently with our partner tools.</p>
+            </div>
+            <div>
+                <h3>Quick Links</h3>
+                <a href="/manage_medicine/">Inventory</a>
+                <a href="/pharmacy_bookings/">Orders</a>
+                <a href="/view_delivery_boys/">Delivery Team</a>
+            </div>
+            <div>
+                <h3>Support</h3>
+                <a href="#">Partner Guide</a>
+                <a href="#">Help Center</a>
+                <a href="#">Contact Admin</a>
+            </div>
+            <div>
+                <h3>Status</h3>
+                <p class="text-muted"><i class="fas fa-check-circle" style="color: #4ade80;"></i> System Operational</p>
+                <p class="text-muted">v2.4.0 (Pro)</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 MediConnect Partner Portal. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
