@@ -424,10 +424,10 @@ def book_medicine_qty(request):
 def my_bookings(request):
     if 'uid' in request.session:
         user = User.objects.get(id=request.session['uid'])
-        # Active bookings: not paid or not delivered
-        active_bookings = Booking.objects.filter(user=user).exclude(payment_status='paid', delivery_status='delivered')
-        # History: paid and delivered
-        history_bookings = Booking.objects.filter(user=user, payment_status='paid', delivery_status='delivered').order_by('-date')
+        # Active bookings: not paid or not delivered or not confirmed
+        active_bookings = Booking.objects.filter(user=user).exclude(payment_status='paid', delivery_status='delivered', user_confirmed=True)
+        # History: paid, delivered, and confirmed
+        history_bookings = Booking.objects.filter(user=user, payment_status='paid', delivery_status='delivered', user_confirmed=True).order_by('-date')
         
         total_amount = 0
         for b in active_bookings:
@@ -515,6 +515,7 @@ def confirm_delivery(request):
             b = Booking.objects.get(id=id)
             if b.delivery_status == 'delivered':
                 b.user_confirmed = True
+                b.status = 'delivered'
                 b.save()
         except:
             pass

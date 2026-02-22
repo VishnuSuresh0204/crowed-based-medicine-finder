@@ -177,7 +177,7 @@
                 <div class="detail-row"><span class="label">Name</span> <span class="value">{{ booking.user.name }}</span></div>
                 <div class="detail-row"><span class="label">Phone</span> <span class="value">{{ booking.user.phone }}</span></div>
                 <div class="detail-row"><span class="label">Email</span> <span class="value">{{ booking.user.email }}</span></div>
-                <div class="detail-row"><span class="label">Address</span> <span class="value">{{ booking.user.place }}</span></div>
+                <div class="detail-row"><span class="label">Delivery Address</span> <span class="value">{{ booking.address }}</span></div>
             </div>
 
             <div class="detail-card">
@@ -188,8 +188,29 @@
                 <div class="detail-row"><span class="label">Date</span> <span class="value">{{ booking.date|date:"Y-m-d" }}</span></div>
                 <div class="detail-row"><span class="label">Status</span> <span class="value">{{ booking.status|title }}</span></div>
                 <div class="detail-row"><span class="label">Payment</span> <span class="value">{{ booking.payment_status|title }}</span></div>
+                {% if booking.user_confirmed %}
+                <div class="detail-row"><span class="label">Confirmation</span> <span class="value" style="color: #4ade80;"><i class="fas fa-check-double"></i> Received by Customer</span></div>
+                {% endif %}
             </div>
         </div>
+
+        {% if booking.delivery_boy %}
+        <div class="detail-card" style="margin-top: 1rem;">
+             <h3 style="margin-top:0; color:var(--primary); margin-bottom:1rem; font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:0.5rem;">
+                <i class="fas fa-truck"></i> Delivery Information
+            </h3>
+            <div class="grid-2">
+                <div>
+                    <p class="label" style="margin-bottom:0.3rem;">Assigned Personnel</p>
+                    <p class="value">{{ booking.delivery_boy.name }} ({{ booking.delivery_boy.phone }})</p>
+                </div>
+                <div>
+                    <p class="label" style="margin-bottom:0.3rem;">Current Status</p>
+                    <p class="value" style="text-transform: uppercase;">{{ booking.get_delivery_status_display }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
         <div class="detail-card" style="margin-top:1rem;">
             <h3 style="margin-top:0; color:var(--primary); margin-bottom:1rem; font-size:1.1rem; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:0.5rem;">
