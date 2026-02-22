@@ -559,22 +559,65 @@ def confirm_delivery(request):
 def user_feedback(request):
     msg = ""
     if 'uid' in request.session:
-        id = request.GET.get('id')
+        id = request.GET.get('id') # pharmacy id
         booking_id = request.GET.get('booking_id')
+        feedback_id = request.GET.get('edit_id')
         user = User.objects.get(id=request.session['uid'])
+        u_obj = user
         
+        edit_feedback = None
+        if feedback_id:
+            edit_feedback = Feedback.objects.get(id=feedback_id, user=u_obj)
+            booking_id = edit_feedback.booking.id if edit_feedback.booking else None
+            id = edit_feedback.pharmacy.id if edit_feedback.pharmacy else None
+
+        if booking_id:
+            b = Booking.objects.get(id=booking_id)
+            if b.delivery_status != 'delivered' or not b.user_confirmed:
+                msg = "Feedback can only be provided for delivered and confirmed orders."
+                return render(request, 'user/send_feedback.html', {'msg': msg})
+        
+        if id and not booking_id:
+            # Pharmacy feedback check: must have at least 1 completed booking
+            completed_bookings = Booking.objects.filter(user=u_obj, medicine__pharmacy_id=id, delivery_status='delivered', user_confirmed=True)
+            if not completed_bookings.exists():
+                msg = "You must have at least one completed order with this pharmacy to provide feedback."
+                return render(request, 'user/send_feedback.html', {'msg': msg})
+
         if request.method == 'POST':
             message = request.POST.get('message')
-            if booking_id:
-                b = Booking.objects.get(id=booking_id)
-                Feedback.objects.create(user=user, pharmacy=b.medicine.pharmacy, booking=b, message=message)
-            elif id:
-                 ph = Pharmacy.objects.get(id=id)
-                 Feedback.objects.create(user=user, pharmacy=ph, message=message)
+            rating = request.POST.get('rating', 5)
+            
+            if edit_feedback:
+                edit_feedback.message = message
+                edit_feedback.rating = rating
+                edit_feedback.save()
             else:
-                 Feedback.objects.create(user=user, message=message)
-            return redirect('/user_home/')
-        return render(request, 'user/send_feedback.html', {'msg': msg})
+                if booking_id:
+                    b = Booking.objects.get(id=booking_id)
+                    Feedback.objects.create(user=u_obj, pharmacy=b.medicine.pharmacy, booking=b, message=message, rating=rating)
+                elif id:
+                     ph = Pharmacy.objects.get(id=id)
+                     Feedback.objects.create(user=u_obj, pharmacy=ph, message=message, rating=rating)
+                else:
+                     Feedback.objects.create(user=u_obj, message=message, rating=rating)
+            return redirect('/view_my_feedbacks/')
+            
+        return render(request, 'user/send_feedback.html', {'msg': msg, 'edit_feedback': edit_feedback})
+    return redirect('/login/')
+
+def view_my_feedbacks(request):
+    if 'uid' in request.session:
+        user = User.objects.get(id=request.session['uid'])
+        feedbacks = Feedback.objects.filter(user=user).order_by('-date')
+        return render(request, 'user/view_feedbacks.html', {'feedbacks': feedbacks})
+    return redirect('/login/')
+
+def delete_feedback(request):
+    if 'uid' in request.session:
+        id = request.GET.get('id')
+        Feedback.objects.filter(id=id, user__id=request.session['uid']).delete()
+        return redirect('/view_my_feedbacks/')
     return redirect('/login/')
 
 def user_report(request):

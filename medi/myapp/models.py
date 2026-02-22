@@ -97,6 +97,7 @@ class Feedback(models.Model):
     pharmacy = models.ForeignKey(Pharmacy, on_delete=models.CASCADE, null=True, blank=True)
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, blank=True)
     message = models.TextField()
+    rating = models.IntegerField(default=5)
     date = models.DateField(auto_now_add=True)
 
 class Report(models.Model):

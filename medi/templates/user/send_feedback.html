@@ -6,15 +6,72 @@
     <h2 class="text-gradient" style="margin-bottom:0.5rem; width:fit-content; font-size: 2rem; font-weight: 700;">Send Feedback</h2>
     <p class="text-muted" style="margin-bottom:2rem;">We value your feedback. Let us know how we can improve.</p>
     
+    {% if msg %}
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: center;">
+            {{ msg }}
+        </div>
+    {% endif %}
+
     <form method="post">
         {% csrf_token %}
+        <div class="form-group" style="margin-bottom:2rem; text-align: center;">
+            <label style="margin-bottom: 1rem; display: block; color: var(--muted); font-size: 0.9rem;">How would you rate your experience?</label>
+            <div id="star-rating" style="display: flex; justify-content: center; gap: 0.8rem; font-size: 2rem; cursor: pointer;">
+                {% for i in "12345" %}
+                <i class="far fa-star star" data-value="{{ forloop.counter }}" style="color: var(--accent); transition: transform 0.2s;"></i>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="rating" id="rating-input" value="{% if edit_feedback %}{{ edit_feedback.rating }}{% else %}5{% endif %}">
+        </div>
+
         <div class="form-group" style="margin-bottom:1.5rem;">
             <label style="margin-bottom: 0.5rem; display: block; color: var(--muted);">Message</label>
-            <textarea name="message" rows="5" required minlength="10" placeholder="Type your feedback here..." class="glass-card" style="width:100%; padding:1rem; border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:white; outline:none; resize: vertical; background: rgba(15, 23, 42, 0.6); box-shadow: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" title="Message must be at least 10 characters long"></textarea>
+            <textarea name="message" rows="5" required minlength="10" placeholder="Type your feedback here..." class="glass-card" style="width:100%; padding:1rem; border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:white; outline:none; resize: vertical; background: rgba(15, 23, 42, 0.6); box-shadow: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" title="Message must be at least 10 characters long">{% if edit_feedback %}{{ edit_feedback.message }}{% endif %}</textarea>
         </div>
         <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem;">
-            Submit Feedback <i class="fas fa-paper-plane" style="margin-left: 5px;"></i>
+            {% if edit_feedback %}Update Review{% else %}Submit Feedback{% endif %} <i class="fas fa-paper-plane" style="margin-left: 5px;"></i>
         </button>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating-input');
+        const initialRating = parseInt(ratingInput.value);
+
+        function setStars(value) {
+            stars.forEach(s => {
+                const starValue = parseInt(s.getAttribute('data-value'));
+                if (starValue <= value) {
+                    s.classList.remove('far');
+                    s.classList.add('fas');
+                } else {
+                    s.classList.remove('fas');
+                    s.classList.add('far');
+                }
+            });
+        }
+
+        setStars(initialRating);
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', function() {
+                setStars(this.getAttribute('data-value'));
+                this.style.transform = 'scale(1.2)';
+            });
+
+            star.addEventListener('mouseout', function() {
+                setStars(ratingInput.value);
+                this.style.transform = 'scale(1)';
+            });
+
+            star.addEventListener('click', function() {
+                const val = this.getAttribute('data-value');
+                ratingInput.value = val;
+                setStars(val);
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -60,6 +60,8 @@ urlpatterns = [
     path('confirm_delivery/', views.confirm_delivery),
     path('user_profile/', views.user_profile),
     path('my_invoices/', views.my_invoices),
+    path('view_my_feedbacks/', views.view_my_feedbacks),
+    path('delete_feedback/', views.delete_feedback),
     
     # Admin
     path('admin_home/', views.admin_home),

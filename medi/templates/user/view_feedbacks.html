@@ -1,0 +1,59 @@
+{% extends 'user/base.html' %}
+{% block title %}My Feedbacks{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 class="text-gradient" style="margin:0; font-size:2rem; font-weight: 700;">My Feedbacks</h2>
+        <a href="/my_bookings/" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+            New Feedback <i class="fas fa-plus" style="margin-left: 5px;"></i>
+        </a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+        {% for f in feedbacks %}
+        <div class="glass-card" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; transition: transform 0.3s; transform-origin: center;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                <div>
+                    {% if f.booking %}
+                        <span class="badge badge-info" style="font-size: 0.7rem; margin-bottom: 5px; display: inline-block;">Order Review</span>
+                        <h4 style="color: white; margin: 0; font-size: 1.1rem;">{{ f.booking.medicine.name }}</h4>
+                    {% elif f.pharmacy %}
+                        <span class="badge badge-success" style="font-size: 0.7rem; margin-bottom: 5px; display: inline-block;">Pharmacy Review</span>
+                        <h4 style="color: white; margin: 0; font-size: 1.1rem;">{{ f.pharmacy.name }}</h4>
+                    {% else %}
+                        <span class="badge badge-warning" style="font-size: 0.7rem; margin-bottom: 5px; display: inline-block;">General Feedback</span>
+                        <h4 style="color: white; margin: 0; font-size: 1.1rem;">MediConnect Platform</h4>
+                    {% endif %}
+                </div>
+                <div style="color: var(--accent); font-size: 1rem; display: flex; gap: 2px;">
+                    {% for i in "12345" %}
+                        <i class="{% if forloop.counter <= f.rating %}fas{% else %}far{% endif %} fa-star"></i>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <p class="text-muted" style="font-style: italic; line-height: 1.6; margin-bottom: 1.5rem; min-height: 4rem;">"{{ f.message }}"</p>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                <small class="text-muted"><i class="far fa-calendar-alt"></i> {{ f.date|date:"M d, Y" }}</small>
+                <div style="display: flex; gap: 0.8rem;">
+                    <a href="/user_feedback/?edit_id={{ f.id }}" class="text-primary" style="text-decoration: none; font-size: 0.85rem; font-weight: 600;">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="/delete_feedback/?id={{ f.id }}" class="text-danger" style="text-decoration: none; font-size: 0.85rem; font-weight: 600;" onclick="return confirm('Are you sure you want to delete this feedback?');">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
+            <i class="fas fa-comment-slash" style="font-size: 3rem; color: var(--muted); opacity: 0.3; margin-bottom: 1rem;"></i>
+            <p class="text-muted">You haven't shared any feedback yet.</p>
+            <a href="/my_bookings/" class="text-primary" style="text-decoration: none; font-weight: 500;">Go to your orders to leave a review</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
