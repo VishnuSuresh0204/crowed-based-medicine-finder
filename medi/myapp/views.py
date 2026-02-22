@@ -180,6 +180,14 @@ def admin_view_deliveries(request):
         return render(request, 'admin/view_deliveries.html', {'bookings': bookings})
     return redirect('/login/')
 
+def admin_view_pharmacy_delivery_boys(request):
+    if request.user.is_authenticated and request.user.user_type == 'admin':
+        id = request.GET.get('id')
+        pharmacy = Pharmacy.objects.get(id=id)
+        delivery_boys = DeliveryBoy.objects.filter(pharmacy=pharmacy)
+        return render(request, 'admin/view_pharmacy_delivery_boys.html', {'pharmacy': pharmacy, 'delivery_boys': delivery_boys})
+    return redirect('/login/')
+
 # --- PHARMACY VIEWS ---
 
 def pharmacy_home(request):
@@ -551,12 +559,17 @@ def confirm_delivery(request):
 def user_feedback(request):
     msg = ""
     if 'uid' in request.session:
+        id = request.GET.get('id')
+        booking_id = request.GET.get('booking_id')
+        user = User.objects.get(id=request.session['uid'])
+        
         if request.method == 'POST':
             message = request.POST.get('message')
-            pharmacy_id = request.GET.get('id')
-            user = User.objects.get(id=request.session['uid'])
-            if pharmacy_id:
-                 ph = Pharmacy.objects.get(id=pharmacy_id)
+            if booking_id:
+                b = Booking.objects.get(id=booking_id)
+                Feedback.objects.create(user=user, pharmacy=b.medicine.pharmacy, booking=b, message=message)
+            elif id:
+                 ph = Pharmacy.objects.get(id=id)
                  Feedback.objects.create(user=user, pharmacy=ph, message=message)
             else:
                  Feedback.objects.create(user=user, message=message)

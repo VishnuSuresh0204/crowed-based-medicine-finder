@@ -95,6 +95,7 @@ class Booking(models.Model):
 class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     pharmacy = models.ForeignKey(Pharmacy, on_delete=models.CASCADE, null=True, blank=True)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, blank=True)
     message = models.TextField()
     date = models.DateField(auto_now_add=True)
 

@@ -92,7 +92,12 @@
                             {% if b.delivery_status == 'delivered' and not b.user_confirmed %}
                                 <a href="/confirm_delivery/?id={{ b.id }}" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; background: #22c55e; border: none;">Confirm Receipt</a>
                             {% elif b.user_confirmed %}
-                                <span style="color:#4ade80; font-size:0.8rem;"><i class="fas fa-check-double"></i> Received</span>
+                                <div style="display: flex; flex-direction: column; gap: 5px;">
+                                    <span style="color:#4ade80; font-size:0.8rem;"><i class="fas fa-check-double"></i> Received</span>
+                                    <a href="/user_feedback/?booking_id={{ b.id }}" class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; border-color: rgba(56, 189, 248, 0.4); color: var(--primary); text-decoration: none;">
+                                        <i class="fas fa-comment-dots"></i> Feedback
+                                    </a>
+                                </div>
                             {% endif %}
                         </div>
                     </td>
@@ -121,12 +126,22 @@
                 <a href="/bill/?pid={{ pid }}" class="btn btn-outline" style="margin-top: 5px; padding: 0.3rem 0.8rem; font-size: 0.75rem; border-color: var(--primary); color: var(--primary);">View Invoice <i class="fas fa-file-invoice"></i></a>
             </div>
         </div>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.2rem;">
             {% for b in group.items %}
-            <div style="background: rgba(15, 23, 42, 0.4); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
-                <i class="fas fa-pills" style="color: var(--secondary); margin-right: 5px;"></i> {{ b.medicine.name }} ({{ b.quantity }})
+            <div style="background: rgba(15, 23, 42, 0.4); padding: 0.8rem 1.2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; display: flex; flex-direction: column; gap: 8px;">
+                <div style="font-size: 0.9rem; color: white;">
+                    <i class="fas fa-pills" style="color: var(--secondary); margin-right: 5px;"></i> {{ b.medicine.name }} ({{ b.quantity }})
+                </div>
+                <a href="/user_feedback/?booking_id={{ b.id }}" style="font-size: 0.75rem; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 5px; opacity: 0.8; transition: 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
+                    <i class="fas fa-star-half-alt"></i> Rate this item
+                </a>
             </div>
             {% endfor %}
+        </div>
+        <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+            <a href="/user_feedback/?id={{ group.items.0.medicine.pharmacy.id }}" style="color: var(--muted); font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 8px; width: fit-content; transition: 0.3s;" onmouseover="this.style.color='var(--secondary)'" onmouseout="this.style.color='var(--muted)'">
+                <i class="fas fa-store"></i> Rate the Experience at {{ group.items.0.medicine.pharmacy.name }}
+            </a>
         </div>
     </div>
     {% empty %}

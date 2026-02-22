@@ -68,6 +68,7 @@ urlpatterns = [
     path('view_feedbacks/', views.view_feedbacks),
     path('view_reports/', views.view_reports),
     path('admin_view_deliveries/', views.admin_view_deliveries),
+    path('admin_view_pharmacy_delivery_boys/', views.admin_view_pharmacy_delivery_boys),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
