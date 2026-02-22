@@ -498,6 +498,8 @@ def bill(request):
     if 'uid' in request.session:
         user = User.objects.get(id=request.session['uid'])
         payment_id = request.GET.get('pid')
+        if payment_id == "None": payment_id = None
+        
         if payment_id:
             bookings = Booking.objects.filter(user=user, payment_id=payment_id)
         else:
@@ -505,6 +507,9 @@ def bill(request):
             if bookings.exists():
                 payment_id = bookings[0].payment_id
                 bookings = bookings.filter(payment_id=payment_id)
+        
+        if not bookings.exists():
+            return redirect('/my_invoices/')
 
         total = sum(b.amount for b in bookings)
         date = bookings[0].date if bookings.exists() else datetime.datetime.now()
