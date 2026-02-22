@@ -8,7 +8,7 @@
     <div style="background: rgba(30, 41, 59, 0.4); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border:1px solid rgba(255,255,255,0.05);">
         <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
             <span class="text-muted">Price per unit</span>
-            <strong style="color: #4ade80;">${{ medicine.price }}</strong>
+            <strong style="color: #4ade80;">₹{{ medicine.price }}</strong>
         </div>
         <div style="display:flex; justify-content:space-between;">
             <span class="text-muted">Available Stock</span>
@@ -24,13 +24,18 @@
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="form-group" style="margin-bottom:2rem;">
-            <label style="margin-bottom: 1rem; display: block;">Select Quantity</label>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+            <label style="margin-bottom: 0.5rem; display: block;">Select Quantity</label>
             <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
                 <button type="button" onclick="document.querySelector('input[name=quantity]').stepDown()" class="btn btn-outline" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border-color: rgba(255,255,255,0.2);">-</button>
                 <input type="number" name="quantity" min="1" max="{{ medicine.stock }}" required value="1" class="form-control" style="width: 80px; text-align: center; font-size: 1.2rem; font-weight: 700;">
                 <button type="button" onclick="document.querySelector('input[name=quantity]').stepUp()" class="btn btn-outline" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border-color: rgba(255,255,255,0.2);">+</button>
             </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:2rem; text-align: left;">
+            <label style="margin-bottom: 0.5rem; display: block; color: var(--muted);">Delivery Address</label>
+            <textarea name="address" class="form-control" required rows="3" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1);">{{ request.user.user.address }}</textarea>
         </div>
         
         {% if medicine.prescription_required %}

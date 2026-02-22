@@ -33,6 +33,8 @@ class User(models.Model):
     place = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField()
+    address = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to='user_images/', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -81,6 +83,8 @@ class Booking(models.Model):
     delivery_boy = models.ForeignKey(DeliveryBoy, on_delete=models.SET_NULL, null=True, blank=True)
     delivery_status = models.CharField(max_length=20, default='pending')
     user_confirmed = models.BooleanField(default=False)
+    address = models.TextField(null=True, blank=True)
+    payment_id = models.CharField(max_length=100, null=True, blank=True)
 
 class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

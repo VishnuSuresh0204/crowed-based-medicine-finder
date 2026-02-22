@@ -17,6 +17,14 @@
         <a href="/view_shops/" class="nav-link"><i class="fas fa-store-alt"></i> Pharmacies</a>
         <a href="/view_medicines/" class="nav-link"><i class="fas fa-pills"></i> Medicines</a>
         <a href="/my_bookings/" class="nav-link"><i class="fas fa-clipboard-list"></i> Orders</a>
+        <a href="/user_profile/" class="nav-link" style="display: flex; align-items: center; gap: 8px;">
+            {% if profile_user.image %}
+                <img src="{{ profile_user.image.url }}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--primary);">
+            {% else %}
+                <i class="fas fa-user-circle"></i>
+            {% endif %}
+            Profile
+        </a>
         <a href="/bill/" class="nav-link"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
         <a href="/logout/" class="btn btn-outline" style="border-color: rgba(239, 68, 68, 0.5); color: #fca5a5;">Logout</a>
     </div>

@@ -1,0 +1,61 @@
+{% extends 'user/base.html' %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+
+<div class="glass-card" style="max-width: 600px; margin: 2rem auto; padding: 3rem;">
+    <h2 class="text-gradient" style="margin-bottom: 2rem; text-align: center;">My Profile</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="text-center" style="margin-bottom: 2rem;">
+            {% if u.image %}
+                <img src="{{ u.image.url }}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); padding: 5px; margin-bottom: 1rem;">
+            {% else %}
+                <div style="width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-size: 3rem; color: var(--muted); border: 2px dashed rgba(255,255,255,0.2);">
+                    <i class="fas fa-user"></i>
+                </div>
+            {% endif %}
+            
+            <div style="position: relative; width: fit-content; margin: 0 auto;">
+                <input type="file" name="image" id="profile-img" style="display: none;">
+                <label for="profile-img" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.8rem; cursor: pointer;">
+                    <i class="fas fa-camera" style="margin-right: 5px;"></i> Change Picture
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label>Full Name</label>
+            <input type="text" name="name" value="{{ u.name }}" class="form-control" required>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label>Mobile Number</label>
+                <input type="text" name="phone" value="{{ u.phone }}" class="form-control" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label>Email Address</label>
+                <input type="email" name="email" value="{{ u.email }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label>Location / City</label>
+            <input type="text" name="place" value="{{ u.place }}" class="form-control" required>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label>Full Delivery Address</label>
+            <textarea name="address" class="form-control" required rows="4">{{ u.address }}</textarea>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <a href="/user_home/" class="btn btn-outline" style="flex: 1;">Back</a>
+            <button type="submit" class="btn btn-primary" style="flex: 2;">Update Profile</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

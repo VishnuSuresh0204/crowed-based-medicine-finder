@@ -18,6 +18,14 @@
         <a href="/pharmacy_bookings/" class="nav-link"><i class="fas fa-shopping-bag"></i> Orders</a>
         <a href="/view_delivery_boys/" class="nav-link"><i class="fas fa-motorcycle"></i> Logistics</a>
         <a href="/pharmacy_feedbacks/" class="nav-link"><i class="fas fa-star"></i> Reviews</a>
+        <a href="/pharmacy_profile/" class="nav-link" style="display: flex; align-items: center; gap: 8px;">
+            {% if profile_pharmacy.image %}
+                <img src="{{ profile_pharmacy.image.url }}" style="width: 24px; height: 18px; border-radius: 4px; object-fit: cover; border: 1px solid var(--primary);">
+            {% else %}
+                <i class="fas fa-user-circle"></i>
+            {% endif %}
+            Profile
+        </a>
         <a href="/logout/" class="btn btn-outline" style="border-color: rgba(239, 68, 68, 0.5); color: #fca5a5;">Logout</a>
     </div>
 </nav>

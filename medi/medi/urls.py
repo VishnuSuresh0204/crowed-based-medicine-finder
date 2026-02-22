@@ -40,6 +40,7 @@ urlpatterns = [
     path('add_delivery_boy/', views.add_delivery_boy),
     path('view_delivery_boys/', views.view_delivery_boys),
     path('delete_delivery_boy/', views.delete_delivery_boy),
+    path('pharmacy_profile/', views.pharmacy_profile),
     
     # Delivery
     path('delivery_home/', views.delivery_home),
@@ -57,6 +58,7 @@ urlpatterns = [
     path('user_feedback/', views.user_feedback),
     path('user_report/', views.user_report),
     path('confirm_delivery/', views.confirm_delivery),
+    path('user_profile/', views.user_profile),
     
     # Admin
     path('admin_home/', views.admin_home),

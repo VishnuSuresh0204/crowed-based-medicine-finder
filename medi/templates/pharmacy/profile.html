@@ -1,0 +1,61 @@
+{% extends 'pharmacy/base.html' %}
+{% block title %}Pharmacy Profile{% endblock %}
+{% block content %}
+
+<div class="glass-card" style="max-width: 700px; margin: 2rem auto; padding: 3rem;">
+    <h2 class="text-gradient" style="margin-bottom: 2rem; text-align: center;">Pharmacy Profile</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="text-center" style="margin-bottom: 2rem;">
+            {% if p.image %}
+                <img src="{{ p.image.url }}" style="width: 180px; height: 120px; border-radius: 12px; object-fit: cover; border: 3px solid var(--primary); padding: 5px; margin-bottom: 1rem;">
+            {% else %}
+                <div style="width: 180px; height: 120px; border-radius: 12px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-size: 3rem; color: var(--muted); border: 2px dashed rgba(255,255,255,0.2);">
+                    <i class="fas fa-clinic-medical"></i>
+                </div>
+            {% endif %}
+            
+            <div style="position: relative; width: fit-content; margin: 0 auto;">
+                <input type="file" name="image" id="pharmacy-img" style="display: none;">
+                <label for="pharmacy-img" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.8rem; cursor: pointer;">
+                    <i class="fas fa-camera" style="margin-right: 5px;"></i> Update Shop Image
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label>Pharmacy Name</label>
+            <input type="text" name="name" value="{{ p.name }}" class="form-control" required>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label>Contact Number</label>
+                <input type="text" name="contact" value="{{ p.contact_number }}" class="form-control" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label>Business Email</label>
+                <input type="email" name="email" value="{{ p.email }}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label>City / area</label>
+            <input type="text" name="place" value="{{ p.place }}" class="form-control" required>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label>Full Business Address</label>
+            <textarea name="location" class="form-control" required rows="4">{{ p.location }}</textarea>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <a href="/pharmacy_home/" class="btn btn-outline" style="flex: 1;">Back</a>
+            <button type="submit" class="btn btn-primary" style="flex: 2;">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

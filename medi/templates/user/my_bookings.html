@@ -4,7 +4,7 @@
 
 <div class="glass-card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h2 class="text-gradient" style="margin:0; font-size:2rem; font-weight: 700;">My Bookings</h2>
+        <h2 class="text-gradient" style="margin:0; font-size:2rem; font-weight: 700;">My Orders</h2>
     </div>
 
     {% if total_amount > 0 %}
@@ -19,43 +19,36 @@
     </div>
     {% endif %}
 
-    <div style="overflow-x:auto;">
+    <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Active Orders</h3>
+    <div style="overflow-x:auto; margin-bottom: 3rem;">
         <table style="width:100%; border-collapse: separate; border-spacing: 0;">
             <thead>
                 <tr>
-                    <th style="border-top-left-radius: 10px;">Medicine</th>
+                    <th style="border-top-left-radius: 10px;">Order Details</th>
                     <th>Pharmacy</th>
                     <th>Qty</th>
                     <th>Amount</th>
-                    <th>Prescription</th>
                     <th>Status</th>
                     <th>Payment</th>
                     <th style="border-top-right-radius: 10px;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                {% for b in bookings %}
+                {% for b in active_bookings %}
                 <tr style="transition: background 0.3s;">
                     <td style="color:white; font-weight:500;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div style="width: 30px; height: 30px; background: rgba(56, 189, 248, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary);">
-                                <i class="fas fa-pills" style="font-size: 0.8rem;"></i>
+                        <div style="display:flex; flex-direction: column;">
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom: 5px;">
+                                <i class="fas fa-pills" style="color: var(--primary);"></i> {{ b.medicine.name }}
                             </div>
-                            {{ b.medicine.name }}
+                            <small class="text-muted" style="font-size: 0.75rem;">
+                                <i class="fas fa-map-marker-alt"></i> Delivery to: {{ b.address|truncatechars:40 }}
+                            </small>
                         </div>
                     </td>
                     <td class="text-muted">{{ b.medicine.pharmacy.name }}</td>
                     <td>{{ b.quantity }}</td>
                     <td style="font-weight: 600; color: var(--text-bright);">₹{{ b.amount }}</td>
-                    <td>
-                        {% if b.prescription %}
-                        <a href="{{ b.prescription.url }}" target="_blank" class="text-primary hover-underline" style="font-size: 0.9rem;">
-                            <i class="fas fa-file-prescription"></i> View
-                        </a>
-                        {% else %}
-                        <span class="text-muted" style="font-size: 0.8rem;">-</span>
-                        {% endif %}
-                    </td>
                     <td>
                          {% if b.status == 'pending_approval' %}
                             <span class="badge badge-warning">Pending Approval</span>
@@ -80,14 +73,12 @@
                     </td>
                     <td>
                         <div style="display:flex; gap: 0.5rem; align-items: center;">
-                            <a href="/view_medicines/?id={{ b.medicine.pharmacy.id }}&search={{ b.medicine.name }}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; border-color: rgba(99, 102, 241, 0.3); color: var(--secondary);">Buy Again</a>
-                            
                             {% if b.payment_status == 'pending' %}
                                 <a href="/cancel_booking/?id={{ b.id }}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; border-color: rgba(239, 68, 68, 0.3); color: #fca5a5;" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel</a>
                             {% endif %}
     
                             {% if b.delivery_status == 'delivered' and not b.user_confirmed %}
-                                <a href="/confirm_delivery/?id={{ b.id }}" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; background: #22c55e; border: none;">Confirm</a>
+                                <a href="/confirm_delivery/?id={{ b.id }}" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; background: #22c55e; border: none;">Confirm Receipt</a>
                             {% elif b.user_confirmed %}
                                 <span style="color:#4ade80; font-size:0.8rem;"><i class="fas fa-check-double"></i> Received</span>
                             {% endif %}
@@ -96,20 +87,43 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="8" style="text-align: center; padding: 4rem; color: var(--muted);">
-                        <i class="fas fa-shopping-basket" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                        <p style="margin-bottom: 1.5rem;">You haven't booked any medicines yet.</p>
-                        <a href="/view_shops/" class="btn btn-primary">Browse Pharmacies</a>
-                    </td>
+                    <td colspan="7" style="text-align: center; padding: 2rem; color: var(--muted);">No active orders.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    
+
+    <h3 style="margin-bottom: 1.5rem; color: var(--muted);">Order History</h3>
+    {% for pid, group in history_groups.items %}
+    <div class="glass-card" style="margin-bottom: 1.5rem; padding: 1.5rem; background: rgba(30, 41, 59, 0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+            <div>
+                <span class="text-muted" style="font-size: 0.85rem;">PAYMENT ID:</span>
+                <strong style="color: white; font-family: monospace; font-size: 1rem;">{{ pid }}</strong>
+                <div class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">{{ group.date|date:"F j, Y, g:i a" }}</div>
+            </div>
+            <div style="text-align: right;">
+                <span class="text-muted" style="display: block; font-size: 0.85rem;">Total Paid:</span>
+                <strong style="color: #4ade80; font-size: 1.25rem;">₹{{ group.total }}</strong>
+                <a href="/bill/?pid={{ pid }}" class="btn btn-outline" style="margin-top: 5px; padding: 0.3rem 0.8rem; font-size: 0.75rem; border-color: var(--primary); color: var(--primary);">View Invoice <i class="fas fa-file-invoice"></i></a>
+            </div>
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            {% for b in group.items %}
+            <div style="background: rgba(15, 23, 42, 0.4); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
+                <i class="fas fa-pills" style="color: var(--secondary); margin-right: 5px;"></i> {{ b.medicine.name }} ({{ b.quantity }})
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted" style="text-align: center; padding: 2rem;">No order history found.</p>
+    {% endfor %}
+
     <div style="margin-top: 2rem; text-align: center;">
-        <a href="/view_medicines/" class="btn btn-outline" style="display:inline-flex; align-items:center; gap:0.5rem; border-color: var(--primary); color: var(--primary);">
-            <i class="fas fa-plus"></i> Add More Medicines
+        <a href="/view_medicines/" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:0.5rem;">
+            <i class="fas fa-shopping-cart"></i> Continue Shopping
         </a>
     </div>
 </div>

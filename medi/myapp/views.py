@@ -69,13 +69,15 @@ def user_reg(request):
         place = request.POST.get('place')
         phone = request.POST.get('phone')
         email = request.POST.get('email')
+        address = request.POST.get('address')
+        image = request.FILES.get('image')
         u = request.POST.get('username')
         p = request.POST.get('password')
         if Login.objects.filter(username=u).exists():
             msg = "Username already exists"
         else:
             user = Login.objects.create_user(username=u, password=p, user_type='user', view_password=p)
-            User.objects.create(login=user, name=name, place=place, phone=phone, email=email)
+            User.objects.create(login=user, name=name, place=place, phone=phone, email=email, address=address, image=image)
             return redirect('/login/')
     return render(request, 'user_reg.html', {'msg': msg})
 
@@ -313,11 +315,43 @@ def pharmacy_feedbacks(request):
     return redirect('/login/')
 
 
+def pharmacy_profile(request):
+    if 'pid' in request.session:
+        pharmacy = Pharmacy.objects.get(id=request.session['pid'])
+        if request.method == 'POST':
+            pharmacy.name = request.POST.get('name')
+            pharmacy.place = request.POST.get('place')
+            pharmacy.location = request.POST.get('location')
+            pharmacy.contact_number = request.POST.get('contact')
+            pharmacy.email = request.POST.get('email')
+            if request.FILES.get('image'):
+                pharmacy.image = request.FILES.get('image')
+            pharmacy.save()
+            return redirect('/pharmacy_home/')
+        return render(request, 'pharmacy/profile.html', {'p': pharmacy})
+    return redirect('/login/')
+
 # --- USER VIEWS ---
 
 def user_home(request):
     if 'uid' in request.session:
         return render(request, 'user/home.html')
+    return redirect('/login/')
+
+def user_profile(request):
+    if 'uid' in request.session:
+        user = User.objects.get(id=request.session['uid'])
+        if request.method == 'POST':
+            user.name = request.POST.get('name')
+            user.place = request.POST.get('place')
+            user.phone = request.POST.get('phone')
+            user.email = request.POST.get('email')
+            user.address = request.POST.get('address')
+            if request.FILES.get('image'):
+                user.image = request.FILES.get('image')
+            user.save()
+            return redirect('/user_home/')
+        return render(request, 'user/profile.html', {'u': user})
     return redirect('/login/')
 
 def view_shops(request):
@@ -364,6 +398,7 @@ def book_medicine_qty(request):
         medicine = Medicine.objects.get(id=id)
         if request.method == 'POST':
             qty = int(request.POST.get('quantity'))
+            address = request.POST.get('address')
             if medicine.stock >= qty:
                 # Deduct stock immediately (Reservation)
                 medicine.stock -= qty
@@ -379,7 +414,7 @@ def book_medicine_qty(request):
                     status = 'pending_approval'
                     prescription = request.FILES.get('prescription')
                 
-                Booking.objects.create(user=user, medicine=medicine, quantity=qty, amount=amount, status=status, payment_status='pending', prescription=prescription)
+                Booking.objects.create(user=user, medicine=medicine, quantity=qty, amount=amount, status=status, payment_status='pending', prescription=prescription, address=address)
                 return redirect('/my_bookings/')
             else:
                 msg = "Out of Stock"
@@ -389,12 +424,30 @@ def book_medicine_qty(request):
 def my_bookings(request):
     if 'uid' in request.session:
         user = User.objects.get(id=request.session['uid'])
-        bookings = Booking.objects.filter(user=user)
+        # Active bookings: not paid or not delivered
+        active_bookings = Booking.objects.filter(user=user).exclude(payment_status='paid', delivery_status='delivered')
+        # History: paid and delivered
+        history_bookings = Booking.objects.filter(user=user, payment_status='paid', delivery_status='delivered').order_by('-date')
+        
         total_amount = 0
-        for b in bookings:
+        for b in active_bookings:
             if b.payment_status == 'pending' and b.status == 'booked':
                 total_amount += b.amount
-        return render(request, 'user/my_bookings.html', {'bookings': bookings, 'total_amount': total_amount})
+        
+        # Group history by payment_id
+        history_groups = {}
+        for b in history_bookings:
+            pid = b.payment_id or 'order_'+str(b.id)
+            if pid not in history_groups:
+                history_groups[pid] = {'date': b.date, 'items': [], 'total': 0}
+            history_groups[pid]['items'].append(b)
+            history_groups[pid]['total'] += b.amount
+
+        return render(request, 'user/my_bookings.html', {
+            'active_bookings': active_bookings, 
+            'history_groups': history_groups,
+            'total_amount': total_amount
+        })
     return redirect('/login/')
 
 def make_payment(request):
@@ -403,23 +456,39 @@ def make_payment(request):
         user = User.objects.get(id=request.session['uid'])
         if request.method == 'POST':
             pending_bookings = Booking.objects.filter(user=user, payment_status='pending', status='booked')
+            if not pending_bookings.exists():
+                return redirect('/my_bookings/')
+                
+            payment_id = 'PAY' + datetime.datetime.now().strftime('%Y%m%d%H%M%S')
             # Stock is already reserved, just update status
             for b in pending_bookings:
                 b.payment_status = 'paid'
                 b.status = 'paid'
+                b.payment_id = payment_id
                 b.save()
             
-            return redirect('/bill/')
+            return redirect(f'/bill/?pid={payment_id}')
         
-        return render(request, 'user/payment.html', {'msg': msg})
+        total_amount = sum(b.amount for b in Booking.objects.filter(user=user, payment_status='pending', status='booked'))
+        return render(request, 'user/payment.html', {'msg': msg, 'total_amount': total_amount})
     return redirect('/login/')
 
 def bill(request):
     if 'uid' in request.session:
         user = User.objects.get(id=request.session['uid'])
-        bookings = Booking.objects.filter(user=user, payment_status='paid')
+        payment_id = request.GET.get('pid')
+        if payment_id:
+            bookings = Booking.objects.filter(user=user, payment_id=payment_id)
+        else:
+            bookings = Booking.objects.filter(user=user, payment_status='paid').order_by('-date')
+            if bookings.exists():
+                payment_id = bookings[0].payment_id
+                bookings = bookings.filter(payment_id=payment_id)
+
         total = sum(b.amount for b in bookings)
-        return render(request, 'user/bill.html', {'bookings': bookings, 'total': total, 'date': datetime.datetime.now()})
+        date = bookings[0].date if bookings.exists() else datetime.datetime.now()
+        
+        return render(request, 'user/bill.html', {'bookings': bookings, 'total': total, 'date': date, 'payment_id': payment_id})
     return redirect('/login/')
 
 def cancel_booking(request):

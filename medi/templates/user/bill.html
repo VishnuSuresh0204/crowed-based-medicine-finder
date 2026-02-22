@@ -26,7 +26,11 @@
             </div>
             <div>
                 <span class="text-muted" style="font-size: 0.8rem;">ORDER TOTAL</span>
-                <div style="font-weight: 600; color: var(--primary);">${{ total }}</div>
+                <div style="font-weight: 600; color: var(--primary);">₹{{ total }}</div>
+            </div>
+            <div>
+                <span class="text-muted" style="font-size: 0.8rem;">INVOICE #</span>
+                <div style="font-weight: 600; color: white;">{{ payment_id|default:"N/A" }}</div>
             </div>
         </div>
     </div>
@@ -47,21 +51,24 @@
                     <td style="padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
                         <div style="font-weight: 600; color: white;">{{ b.medicine.name }}</div>
                         <div style="font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem;">{{ b.medicine.pharmacy.name }}</div>
+                        <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 5px;">
+                            <i class="fas fa-map-marker-alt"></i> Ships to: {{ b.address }}
+                        </div>
                     </td>
                     <td style="text-align: center; padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-bright);">{{ b.quantity }}</td>
-                    <td style="text-align: right; padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--muted);">${{ b.medicine.price }}</td>
-                    <td style="text-align: right; padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 600; color: white;">${{ b.amount }}</td>
+                    <td style="text-align: right; padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--muted);">₹{{ b.medicine.price }}</td>
+                    <td style="text-align: right; padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 600; color: white;">₹{{ b.amount }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan="3" style="text-align: right; padding-top: 2rem; color: var(--muted);">Subtotal</td>
-                    <td style="text-align: right; padding-top: 2rem; color: white;">${{ total }}</td>
+                    <td style="text-align: right; padding-top: 2rem; color: white;">₹{{ total }}</td>
                 </tr>
                 <tr>
                     <td colspan="3" style="text-align: right; padding-top: 0.5rem; color: var(--primary); font-weight: 700; font-size: 1.5rem;">Grand Total</td>
-                    <td style="text-align: right; padding-top: 0.5rem; color: var(--primary); font-weight: 700; font-size: 1.5rem;">${{ total }}</td>
+                    <td style="text-align: right; padding-top: 0.5rem; color: var(--primary); font-weight: 700; font-size: 1.5rem;">₹{{ total }}</td>
                 </tr>
             </tfoot>
         </table>
