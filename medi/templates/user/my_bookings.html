@@ -58,9 +58,16 @@
                             <span class="badge badge-success">{{ b.status|title }}</span>
                          {% endif %}
                          
-                         {% if b.delivery_status != 'pending' %}
-                            <div style="margin-top:0.3rem; font-size:0.75rem; color: var(--secondary);">
-                                <i class="fas fa-truck"></i> {{ b.get_delivery_status_display }}
+                         {% if b.payment_status == 'paid' %}
+                            <div style="margin-top:0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); font-size:0.75rem;">
+                                <div style="color: var(--secondary); margin-bottom: 3px;">
+                                    <i class="fas fa-truck"></i> {{ b.get_delivery_status_display }}
+                                </div>
+                                {% if b.delivery_boy %}
+                                    <div style="color: var(--muted); font-size: 0.7rem;">
+                                        <i class="fas fa-user"></i> {{ b.delivery_boy.name }} ({{ b.delivery_boy.phone }})
+                                    </div>
+                                {% endif %}
                             </div>
                          {% endif %}
                     </td>
