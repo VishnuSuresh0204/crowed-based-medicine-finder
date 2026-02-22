@@ -6,9 +6,9 @@ MediConnect is a premium, dark-themed healthcare management platform designed to
 
 ### 👤 Multi-Role Dashboard
 
-- **Admin**: Manage pharmacies, verify delivery personnel, and monitor system analytics.
+- **Admin**: Manage pharmacies, verify delivery personnel, monitor system analytics, and audit pharmacy-linked delivery staff.
 - **Pharmacy**: Manage inventory, stock reservation, and incoming orders.
-- **User**: Search for medicines, upload prescriptions, and track active deliveries.
+- **User**: Search for medicines, upload prescriptions, track active deliveries, and manage order ratings/feedbacks.
 - **Delivery Boy**: Manage assigned deliveries, navigate using user addresses, and update real-time status.
 
 ### 💊 Core Functionalities
@@ -16,8 +16,10 @@ MediConnect is a premium, dark-themed healthcare management platform designed to
 - **Real-time Stock Management**: Automatic deduction upon booking and restoration on cancellation.
 - **Prescription System**: Secure prescription upload for restricted medicines with pharmacist approval workflow.
 - **Smart Delivery Tracking**: Real-time status updates (Picked Up, On the Way, Delivered) with user confirmation.
-- **Invoice Management**: Automated generation of separate invoices for each payment transaction.
-- **Profile Customization**: Detailed profiles with image support for both users and pharmacies.
+- **Advanced Feedback & Ratings**: Star-rated feedback (1-5) for orders and pharmacies, restricted to completed deliveries with edit/delete support.
+- **Invoice Management**: Automated generation of separate invoices for each payment transaction with ₹ localization.
+- **Profile Customization**: Detailed profiles with image support and address management for seamless delivery.
+- **Admin Oversight**: Dedicated views for administrators to monitor delivery personnel associated with specific pharmacies.
 
 ## 🛠️ Tech Stack
 
