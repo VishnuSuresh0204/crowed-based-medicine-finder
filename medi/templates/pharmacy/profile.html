@@ -27,13 +27,13 @@
         
         <div class="form-group" style="margin-bottom: 1.5rem;">
             <label>Pharmacy Name</label>
-            <input type="text" name="name" value="{{ p.name }}" class="form-control" required>
+            <input type="text" name="name" value="{{ p.name }}" class="form-control" required minlength="3">
         </div>
 
         <div class="grid-2">
             <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label>Contact Number</label>
-                <input type="text" name="contact" value="{{ p.contact_number }}" class="form-control" required>
+                <input type="text" name="contact" value="{{ p.contact_number }}" class="form-control" required pattern="[0-9]{10}" maxlength="10" title="10-digit mobile number">
             </div>
             <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label>Business Email</label>

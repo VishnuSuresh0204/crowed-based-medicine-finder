@@ -22,12 +22,12 @@
         <div class="grid-2">
             <div class="form-group">
                 <label>Pharmacy Name</label>
-                <input type="text" name="name" class="form-control" required>
+                <input type="text" name="name" class="form-control" required minlength="3">
             </div>
 
             <div class="form-group">
                 <label>Business Phone</label>
-                <input type="text" name="contact" class="form-control" required>
+                <input type="text" name="contact" class="form-control" required pattern="[0-9]{10}" maxlength="10" title="10-digit mobile number">
             </div>
         </div>
 
@@ -56,12 +56,12 @@
         <div class="grid-2">
             <div class="form-group">
                 <label>Admin Username</label>
-                <input type="text" name="username" class="form-control" required>
+                <input type="text" name="username" class="form-control" required minlength="4">
             </div>
 
             <div class="form-group">
                 <label>Admin Password</label>
-                <input type="password" name="password" class="form-control" required>
+                <input type="password" name="password" class="form-control" required minlength="6">
             </div>
         </div>
 

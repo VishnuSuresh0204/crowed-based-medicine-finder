@@ -27,13 +27,13 @@
         
         <div class="form-group" style="margin-bottom: 1.5rem;">
             <label>Full Name</label>
-            <input type="text" name="name" value="{{ u.name }}" class="form-control" required>
+            <input type="text" name="name" value="{{ u.name }}" class="form-control" required pattern="[A-Za-z\s]+" title="Letters and spaces only">
         </div>
 
         <div class="grid-2">
             <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label>Mobile Number</label>
-                <input type="text" name="phone" value="{{ u.phone }}" class="form-control" required>
+                <input type="text" name="phone" value="{{ u.phone }}" class="form-control" required pattern="[0-9]{10}" maxlength="10" title="10-digit mobile number">
             </div>
             <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label>Email Address</label>

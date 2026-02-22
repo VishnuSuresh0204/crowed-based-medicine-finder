@@ -22,12 +22,12 @@
         <div class="grid-2">
             <div class="form-group">
                 <label>Full Name</label>
-                <input type="text" name="name" class="form-control" required>
+                <input type="text" name="name" class="form-control" required pattern="[A-Za-z\s]+" title="Letters and spaces only">
             </div>
 
             <div class="form-group">
                 <label>Mobile Number</label>
-                <input type="text" name="phone" class="form-control" required>
+                <input type="text" name="phone" class="form-control" required pattern="[0-9]{10}" maxlength="10" title="10-digit mobile number">
             </div>
         </div>
 
@@ -54,12 +54,12 @@
         <div class="grid-2">
             <div class="form-group">
                 <label>Choose Username</label>
-                <input type="text" name="username" class="form-control" required>
+                <input type="text" name="username" class="form-control" required minlength="4">
             </div>
 
             <div class="form-group">
                 <label>Create Password</label>
-                <input type="password" name="password" class="form-control" required>
+                <input type="password" name="password" class="form-control" required minlength="6">
             </div>
         </div>
 

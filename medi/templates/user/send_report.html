@@ -18,7 +18,7 @@
         {% csrf_token %}
         <div class="form-group" style="margin-bottom:1.5rem;">
             <label style="margin-bottom: 0.5rem; display: block; color: var(--muted);">Description of Issue</label>
-            <textarea name="message" rows="5" required placeholder="Describe the incident..." class="glass-card" style="width:100%; padding:1rem; border:1px solid rgba(239, 68, 68, 0.3); border-radius:12px; color:white; outline:none; resize: vertical; background: rgba(15, 23, 42, 0.6); box-shadow: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='#ef4444'" onblur="this.style.borderColor='rgba(239, 68, 68, 0.3)'"></textarea>
+            <textarea name="message" rows="5" required minlength="10" placeholder="Describe the incident..." class="glass-card" style="width:100%; padding:1rem; border:1px solid rgba(239, 68, 68, 0.3); border-radius:12px; color:white; outline:none; resize: vertical; background: rgba(15, 23, 42, 0.6); box-shadow: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='#ef4444'" onblur="this.style.borderColor='rgba(239, 68, 68, 0.3)'" title="Message must be at least 10 characters long"></textarea>
         </div>
         <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; background: linear-gradient(45deg, #ef4444, #f97316); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); border: none;">
             Submit Report <i class="fas fa-arrow-right" style="margin-left: 5px;"></i>
