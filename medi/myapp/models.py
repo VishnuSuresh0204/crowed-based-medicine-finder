@@ -81,7 +81,13 @@ class Booking(models.Model):
     payment_status = models.CharField(max_length=20, default='pending')
     prescription = models.ImageField(upload_to='prescriptions/', null=True, blank=True)
     delivery_boy = models.ForeignKey(DeliveryBoy, on_delete=models.SET_NULL, null=True, blank=True)
-    delivery_status = models.CharField(max_length=20, default='pending')
+    DELIVERY_STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('picked_up', 'Picked Up'),
+        ('on_the_way', 'On the Way'),
+        ('delivered', 'Delivered'),
+    )
+    delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='pending')
     user_confirmed = models.BooleanField(default=False)
     address = models.TextField(null=True, blank=True)
     payment_id = models.CharField(max_length=100, null=True, blank=True)

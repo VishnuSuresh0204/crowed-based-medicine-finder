@@ -57,18 +57,21 @@
                     <td>
                         <div style="display: flex; flex-direction: column; gap: 4px;">
                             {% if b.payment_status == 'paid' %}
-                            <span class="badge badge-success" style="width: fit-content;"><i class="fas fa-check-circle" style="margin-right: 4px;"></i>Paid</span>
-                            {% else %}
-                            <span class="badge badge-warning" style="width: fit-content;"><i class="fas fa-clock" style="margin-right: 4px;"></i>Pending</span>
-                            {% endif %}
-                            
-                            {% if b.payment_status == 'paid' %}
-                            <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 2px;">
-                                <i class="fas fa-truck"></i> {{ b.get_delivery_status_display }}
-                                {% if b.user_confirmed %}
-                                    <span style="color: #4ade80; display: block; margin-top: 2px;"><i class="fas fa-check-double"></i> Confirmed by User</span>
+                                {% if b.delivery_status == 'delivered' %}
+                                    <span class="badge badge-success" style="width: fit-content;"><i class="fas fa-check-circle"></i> Delivered</span>
+                                {% elif b.delivery_status == 'on_the_way' %}
+                                    <span class="badge badge-info" style="width: fit-content; background: var(--secondary);"><i class="fas fa-truck"></i> On the Way</span>
+                                {% elif b.delivery_status == 'picked_up' %}
+                                    <span class="badge badge-info" style="width: fit-content;"><i class="fas fa-box-open"></i> Picked Up</span>
+                                {% else %}
+                                    <span class="badge badge-success" style="width: fit-content;"><i class="fas fa-check-circle"></i> Paid</span>
                                 {% endif %}
-                            </div>
+                                
+                                {% if b.user_confirmed %}
+                                    <span style="color: #4ade80; font-size: 0.75rem; display: block; margin-top: 2px;"><i class="fas fa-check-double"></i> Confirmed</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge badge-warning" style="width: fit-content;"><i class="fas fa-clock"></i> Pending Payment</span>
                             {% endif %}
                         </div>
                     </td>
