@@ -472,10 +472,14 @@ def my_bookings(request):
             history_groups[pid]['items'].append(b)
             history_groups[pid]['total'] += b.amount
 
+        # Find bookings that already have feedback
+        feedback_booking_ids = Feedback.objects.filter(user=user, booking__isnull=False).values_list('booking_id', flat=True)
+
         return render(request, 'user/my_bookings.html', {
             'active_bookings': active_bookings, 
             'history_groups': history_groups,
-            'total_amount': total_amount
+            'total_amount': total_amount,
+            'feedback_booking_ids': feedback_booking_ids
         })
     return redirect('/login/')
 
@@ -570,6 +574,12 @@ def user_feedback(request):
             edit_feedback = Feedback.objects.get(id=feedback_id, user=u_obj)
             booking_id = edit_feedback.booking.id if edit_feedback.booking else None
             id = edit_feedback.pharmacy.id if edit_feedback.pharmacy else None
+        
+        # New: If booking_id provided but not editing, check for existing feedback
+        if booking_id and not edit_feedback:
+            existing = Feedback.objects.filter(user=u_obj, booking_id=booking_id).first()
+            if existing:
+                return redirect(f'/user_feedback/?edit_id={existing.id}')
 
         if booking_id:
             b = Booking.objects.get(id=booking_id)
