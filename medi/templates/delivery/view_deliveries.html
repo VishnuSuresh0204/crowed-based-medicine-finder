@@ -22,8 +22,8 @@
                 <tr style="transition: background 0.3s;">
                     <td style="color:white; font-weight:500;">#{{ b.id }}</td>
                     <td class="text-bright">{{ b.user.name }}</td>
-                    <td class="text-muted" title="{{ b.user.place }}" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        <i class="fas fa-map-marker-alt text-primary"></i> {{ b.user.place }}
+                    <td class="text-muted" title="{{ b.address }}" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <i class="fas fa-map-marker-alt text-primary"></i> {{ b.address }}
                     </td>
                     <td>
                         <a href="tel:{{ b.user.phone }}" class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.8rem; border-color: rgba(56, 189, 248, 0.3);">
@@ -31,10 +31,19 @@
                         </a>
                     </td>
                     <td>
-                        <span class="badge badge-info">{{ b.get_delivery_status_display }}</span>
+                        {% if b.delivery_status == 'delivered' %}
+                            <span class="badge badge-success"><i class="fas fa-check-circle"></i> Delivered</span>
+                        {% elif b.delivery_status == 'on_the_way' %}
+                            <span class="badge badge-info" style="background: var(--secondary);"><i class="fas fa-truck"></i> On the Way</span>
+                        {% elif b.delivery_status == 'picked_up' %}
+                            <span class="badge badge-info"><i class="fas fa-box-open"></i> Picked Up</span>
+                        {% else %}
+                            <span class="badge badge-info" style="background: rgba(255,255,255,0.1); color: var(--muted);">{{ b.get_delivery_status_display }}</span>
+                        {% endif %}
+                        
                         {% if b.user_confirmed %}
                         <div style="margin-top: 4px; font-size: 0.75rem; color: #4ade80;">
-                            <i class="fas fa-check-circle"></i> Confirmed
+                            <i class="fas fa-check-double"></i> Confirmed
                         </div>
                         {% endif %}
                     </td>
