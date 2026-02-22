@@ -59,6 +59,7 @@ urlpatterns = [
     path('user_report/', views.user_report),
     path('confirm_delivery/', views.confirm_delivery),
     path('user_profile/', views.user_profile),
+    path('my_invoices/', views.my_invoices),
     
     # Admin
     path('admin_home/', views.admin_home),

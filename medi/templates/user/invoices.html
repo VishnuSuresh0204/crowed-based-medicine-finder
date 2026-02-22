@@ -1,0 +1,58 @@
+{% extends 'user/base.html' %}
+{% block title %}My Invoices{% endblock %}
+{% block content %}
+
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 class="text-gradient" style="margin:0; font-size:2rem; font-weight: 700;">Transaction History</h2>
+    </div>
+
+    <div style="display: grid; gap: 1.5rem;">
+        {% for pid, group in history_groups.items %}
+        <div class="glass-card" style="padding: 2rem; background: rgba(30, 41, 59, 0.3); border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s; cursor: pointer;" onclick="window.location='/bill/?pid={{ pid }}'">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                <div style="flex: 1; min-width: 250px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                        <i class="fas fa-file-invoice" style="color: var(--primary); font-size: 1.5rem;"></i>
+                        <span class="text-muted" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Invoice No.</span>
+                        <strong style="color: white; font-family: monospace;">{{ pid }}</strong>
+                    </div>
+                    <div style="color: var(--muted); font-size: 0.9rem;">
+                        <i class="far fa-calendar-alt"></i> Paid on {{ group.date|date:"F j, Y, g:i a" }}
+                    </div>
+                </div>
+                
+                <div style="text-align: right; min-width: 150px;">
+                    <span class="text-muted" style="display: block; font-size: 0.8rem;">Amount Paid</span>
+                    <strong style="color: #4ade80; font-size: 1.5rem;">₹{{ group.total }}</strong>
+                    <a href="/bill/?pid={{ pid }}" class="btn btn-primary" style="margin-top: 0.8rem; padding: 0.4rem 1.2rem; font-size: 0.8rem; border-radius: 50px;">
+                        View Bill <i class="fas fa-chevron-right" style="font-size: 0.7rem; margin-left: 5px;"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                {% for b in group.items %}
+                <span style="background: rgba(15, 23, 42, 0.4); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.8rem; color: var(--muted); display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-capsules" style="color: var(--secondary);"></i> {{ b.medicine.name }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="glass-card" style="text-align: center; padding: 4rem;">
+            <i class="fas fa-receipt" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem; opacity: 0.3;"></i>
+            <p class="text-muted">No paid transactions found.</p>
+            <a href="/view_medicines/" class="btn btn-primary" style="margin-top: 1rem;">Shop Now</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="margin-top: 3rem; text-align: center;">
+        <a href="/user_home/" class="btn btn-outline" style="border-radius: 50px;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+{% endblock %}

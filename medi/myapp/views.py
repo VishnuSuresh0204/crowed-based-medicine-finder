@@ -104,6 +104,27 @@ def logout_view(request):
     logout(request)
     return redirect('/login/')
 
+def my_invoices(request):
+    if 'uid' in request.session:
+        user = User.objects.get(id=request.session['uid'])
+        history_bookings = Booking.objects.filter(user=user, payment_status='paid').order_by('-date')
+        
+        history_groups = {}
+        for b in history_bookings:
+            if b.payment_id not in history_groups:
+                history_groups[b.payment_id] = {
+                    'items': [],
+                    'total': 0,
+                    'date': b.date
+                }
+            history_groups[b.payment_id]['items'].append(b)
+            history_groups[b.payment_id]['total'] += b.amount
+            
+        return render(request, 'user/invoices.html', {'history_groups': history_groups})
+    return redirect('/login/')
+
+# --- BILLING VIEWS ---
+
 # --- ADMIN VIEWS ---
 
 def admin_home(request):
